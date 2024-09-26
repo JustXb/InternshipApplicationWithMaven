@@ -357,5 +357,68 @@ public class BookingService {
 
         return address != null && address.length() <= 30 && Character.isUpperCase(address.charAt(0));
     }
+
+    public void readGuest() throws IOException {
+        String ageInput = getValidInput(ServiceMessages.ENTER_AGE.getMessage(),
+                ServiceMessages.ERROR_MESSAGE_EMPTY_AGE.getMessage());
+        int id = Integer.parseInt(ageInput);
+        System.out.println(repositoryGuest.readById(id));
+    }
+
+
+    public void updateGuest() throws IOException {
+        String bb = getValidInput(ServiceMessages.ENTER_AGE.getMessage(),
+                ServiceMessages.ERROR_MESSAGE_EMPTY_AGE.getMessage());
+        int id = Integer.parseInt(bb);
+        System.out.println(repositoryGuest.readById(id));
+
+        String firstName = null;
+        int age = 0;
+        String address = null;
+        String passport = null;
+
+        System.out.println("Если вы хотите закончить ввод - введите exit");
+
+        firstName = getFirstName(firstName);
+        if (firstName == null) return;  // Прерывание метода
+
+        // Ввод возраста с повторной попыткой в случае ошибки
+        while (age == 0) {
+            try {
+                String ageInput = getValidInput(ServiceMessages.ENTER_AGE.getMessage(),
+                        ServiceMessages.ERROR_MESSAGE_EMPTY_AGE.getMessage());
+                if (ageInput.equalsIgnoreCase("exit")) {
+                    System.out.println("Введите help для получения помощи");
+                    return;  // Прерывание метода
+                }
+                age = Integer.parseInt(ageInput);
+
+
+                // Валидация возраста
+                if (!validateAge(age)) {
+                    System.out.println(ServiceMessages.WRONG_AGE.getMessage());
+                    age = 0; // повторить ввод
+                }
+            } catch (NumberFormatException e) {
+                System.out.println(ServiceMessages.ERROR_AGE_NOT_INT.getMessage());
+                age = 0; // повторить ввод
+            }
+        }
+
+        // Ввод адреса с повторной попыткой в случае ошибки
+        address = getAddress(address);
+        if (address == null) return;  // Прерывание метода
+
+        // Ввод паспорта с повторной попыткой в случае ошибки
+        passport = getPassport(passport);
+        if (passport == null) return;  // Прерывание метода
+
+        // Создание DTO и сущности после успешного ввода всех данных
+        GuestEntity guest = new GuestEntity(firstName, age, passport, address);
+        guest.setId(id);
+
+        repositoryGuest.update(guest);
+
+    }
 }
 

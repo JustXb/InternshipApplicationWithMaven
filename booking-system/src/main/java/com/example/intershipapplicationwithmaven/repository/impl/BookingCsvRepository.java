@@ -28,6 +28,21 @@ public class BookingCsvRepository extends AbstractRepository<BookingEntity> {
     }
 
     @Override
+    public BookingEntity read(int id) throws IOException {
+        return null;
+    }
+
+    @Override
+    public void update(BookingEntity entity) throws IOException {
+
+    }
+
+    @Override
+    public void delete(int id) throws IOException {
+
+    }
+
+    @Override
     protected String getCsvFilePath() {
         return "${receiver.bookings.csv.filepath}"; // Замените на фактический путь
     }

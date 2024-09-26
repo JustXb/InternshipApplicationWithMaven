@@ -5,6 +5,7 @@ import com.example.intershipapplicationwithmaven.service.BookingService;
 import org.slf4j.Logger;
 import org.springframework.stereotype.Component;
 
+import java.sql.SQLOutput;
 import java.util.Locale;
 import java.util.Scanner;
 
@@ -35,6 +36,14 @@ public class ConsoleScanner {
                 switch (command) {
                     case HELP:
                         Commands.printHelp();
+                        break;
+                    case READ:
+                        bookingService.readGuest();
+                        break;
+                    case UPDATE:
+                        bookingService.updateGuest();
+                        break;
+                    case DELETE:
                         break;
                     case CREATE:
                         bookingService.createGuest();
