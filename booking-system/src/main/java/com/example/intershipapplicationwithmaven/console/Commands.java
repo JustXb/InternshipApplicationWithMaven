@@ -3,10 +3,12 @@ package com.example.intershipapplicationwithmaven.console;
 public enum Commands {
 
     HELP("Enter the 'help' to see all commands"),
+    CREATE("To create request for guest validation"),
+
     READ("Read by id"),
+    READALL("Read all guests"),
     UPDATE("Update guest by ID"),
     DELETE("Delete guest by ID"),
-    CREATE("To create request for guest validation"),
     CHECKIN("Check in the hotel"),
     EXIT ("Exit from application")
     ;

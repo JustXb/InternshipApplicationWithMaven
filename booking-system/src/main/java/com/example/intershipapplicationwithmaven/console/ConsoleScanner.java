@@ -37,16 +37,20 @@ public class ConsoleScanner {
                     case HELP:
                         Commands.printHelp();
                         break;
+                    case CREATE:
+                        bookingService.createGuest();
+                        break;
                     case READ:
                         bookingService.readGuest();
+                        break;
+                    case READALL:
+                        bookingService.readGuests();
                         break;
                     case UPDATE:
                         bookingService.updateGuest();
                         break;
                     case DELETE:
-                        break;
-                    case CREATE:
-                        bookingService.createGuest();
+                        bookingService.deleteGuest();
                         break;
                     case CHECKIN:
                         bookingService.checkIn();

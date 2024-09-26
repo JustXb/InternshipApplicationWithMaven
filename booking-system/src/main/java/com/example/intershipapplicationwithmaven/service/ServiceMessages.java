@@ -18,6 +18,12 @@ public enum ServiceMessages {
     ERROR_MESSAGE_EMPTY_PASSPORT("Номер паспорта не может быть пустым."),
     ERROR_AGE_NOT_INT("Ошибка: возраст должен быть числом."),
     ERROR_CREATE_GUEST("Ошибка при создании гостя: " ),
+
+    ENTER_ID("Введите ID гостя: "),
+
+    ERROR_MESSAGE_EMPTY_ID("Поле ID не может быть пустым"),
+
+
     UNKNOWN_ERROR("Неизвестная ошибка: "),
     REQUEST_TO_HOTEL_SYSTEM("Реквест к сервису отелей");
 

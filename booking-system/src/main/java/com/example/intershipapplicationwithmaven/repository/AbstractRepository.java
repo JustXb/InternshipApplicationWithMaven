@@ -1,12 +1,14 @@
 package com.example.intershipapplicationwithmaven.repository;
 
 import com.example.intershipapplicationwithmaven.repository.entity.Entity;
+import com.example.intershipapplicationwithmaven.repository.entity.GuestEntity;
 import com.example.intershipapplicationwithmaven.util.CsvParser;
 import com.example.intershipapplicationwithmaven.util.Mapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.io.IOException;
+import java.util.Optional;
 
 @Repository
 public abstract class AbstractRepository<E extends Entity> {
@@ -23,8 +25,7 @@ public abstract class AbstractRepository<E extends Entity> {
 
     public abstract void create(E entity) throws IOException;
 
-    public abstract E read(int id) throws IOException; // Метод для чтения сущности по ID
-
+    public abstract Optional<E> read(int id) throws IOException;
     public abstract void update(E entity) throws IOException; // Метод для обновления сущности
 
     public abstract void delete(int id) throws IOException; // Метод для удаления сущности

@@ -28,13 +28,16 @@ public class GuestCsvRepository extends AbstractRepository<GuestEntity> {
     }
 
     @Override
-    public GuestEntity read(int id) throws IOException {
-        return null;
-    }
-
-    public Optional<GuestEntity> readById(int id) throws IOException {
+    public Optional<GuestEntity> read(int id) throws IOException {
         List<GuestEntity> guests = csvParser.loadGuests();
         return guests.stream().filter(guest -> guest.getId() == id).findFirst();
+    }
+
+    public void readAll() throws IOException {
+        List<GuestEntity> guests = csvParser.loadGuests();
+        for(GuestEntity guest : guests){
+            guest.getInfo();
+        }
     }
 
     public void update(GuestEntity guestEntity) throws IOException {

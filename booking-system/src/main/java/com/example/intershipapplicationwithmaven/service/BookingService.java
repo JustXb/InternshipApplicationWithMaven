@@ -359,66 +359,97 @@ public class BookingService {
     }
 
     public void readGuest() throws IOException {
-        String ageInput = getValidInput(ServiceMessages.ENTER_AGE.getMessage(),
-                ServiceMessages.ERROR_MESSAGE_EMPTY_AGE.getMessage());
-        int id = Integer.parseInt(ageInput);
-        System.out.println(repositoryGuest.readById(id));
+        String idInput = getValidInput(ServiceMessages.ENTER_ID.getMessage(),
+                ServiceMessages.ERROR_MESSAGE_EMPTY_ID.getMessage());
+        int id = Integer.parseInt(idInput);
+        if(!repositoryGuest.read(id).isEmpty()) {
+            System.out.println(repositoryGuest.read(id));
+        }
+        else{
+            System.out.println("Гостя с таким ID не существует");
+        }
+    }
+
+    public void deleteGuest() throws IOException {
+        String idInput = getValidInput(ServiceMessages.ENTER_ID.getMessage(),
+                ServiceMessages.ERROR_MESSAGE_EMPTY_ID.getMessage());
+        int id = Integer.parseInt(idInput);
+        if(!repositoryGuest.read(id).isEmpty()) {
+            repositoryGuest.delete(id);
+            List<GuestEntity> guests = csvParserGuest.loadGuests();
+            for (GuestEntity guest : guests) {
+                guest.getInfo();
+            }
+        }
+        else{
+            System.out.println("Гостя с таким ID не существует");
+        }
     }
 
 
     public void updateGuest() throws IOException {
-        String bb = getValidInput(ServiceMessages.ENTER_AGE.getMessage(),
-                ServiceMessages.ERROR_MESSAGE_EMPTY_AGE.getMessage());
-        int id = Integer.parseInt(bb);
-        System.out.println(repositoryGuest.readById(id));
+        String idInput = getValidInput(ServiceMessages.ENTER_ID.getMessage(),
+                ServiceMessages.ERROR_MESSAGE_EMPTY_ID.getMessage());
+        int id = Integer.parseInt(idInput);
 
-        String firstName = null;
-        int age = 0;
-        String address = null;
-        String passport = null;
+        if (!repositoryGuest.read(id).isEmpty()) {
 
-        System.out.println("Если вы хотите закончить ввод - введите exit");
+            System.out.println(repositoryGuest.read(id));
+            String firstName = null;
+            int age = 0;
+            String address = null;
+            String passport = null;
 
-        firstName = getFirstName(firstName);
-        if (firstName == null) return;  // Прерывание метода
+            System.out.println("Если вы хотите закончить ввод - введите exit");
 
-        // Ввод возраста с повторной попыткой в случае ошибки
-        while (age == 0) {
-            try {
-                String ageInput = getValidInput(ServiceMessages.ENTER_AGE.getMessage(),
-                        ServiceMessages.ERROR_MESSAGE_EMPTY_AGE.getMessage());
-                if (ageInput.equalsIgnoreCase("exit")) {
-                    System.out.println("Введите help для получения помощи");
-                    return;  // Прерывание метода
-                }
-                age = Integer.parseInt(ageInput);
+            firstName = getFirstName(firstName);
+            if (firstName == null) return;  // Прерывание метода
+
+            // Ввод возраста с повторной попыткой в случае ошибки
+            while (age == 0) {
+                try {
+                    String ageInput = getValidInput(ServiceMessages.ENTER_AGE.getMessage(),
+                            ServiceMessages.ERROR_MESSAGE_EMPTY_AGE.getMessage());
+                    if (ageInput.equalsIgnoreCase("exit")) {
+                        System.out.println("Введите help для получения помощи");
+                        return;  // Прерывание метода
+                    }
+                    age = Integer.parseInt(ageInput);
 
 
-                // Валидация возраста
-                if (!validateAge(age)) {
-                    System.out.println(ServiceMessages.WRONG_AGE.getMessage());
+                    // Валидация возраста
+                    if (!validateAge(age)) {
+                        System.out.println(ServiceMessages.WRONG_AGE.getMessage());
+                        age = 0; // повторить ввод
+                    }
+                } catch (NumberFormatException e) {
+                    System.out.println(ServiceMessages.ERROR_AGE_NOT_INT.getMessage());
                     age = 0; // повторить ввод
                 }
-            } catch (NumberFormatException e) {
-                System.out.println(ServiceMessages.ERROR_AGE_NOT_INT.getMessage());
-                age = 0; // повторить ввод
             }
+
+            // Ввод адреса с повторной попыткой в случае ошибки
+            address = getAddress(address);
+            if (address == null) return;  // Прерывание метода
+
+            // Ввод паспорта с повторной попыткой в случае ошибки
+            passport = getPassport(passport);
+            if (passport == null) return;  // Прерывание метода
+
+            // Создание DTO и сущности после успешного ввода всех данных
+            GuestEntity guest = new GuestEntity(firstName, age, passport, address);
+            guest.setId(id);
+
+            repositoryGuest.update(guest);
+            repositoryGuest.read(id);
         }
+        else{
+            System.out.println("Гостя с таким ID не существует");
+        }
+    }
 
-        // Ввод адреса с повторной попыткой в случае ошибки
-        address = getAddress(address);
-        if (address == null) return;  // Прерывание метода
-
-        // Ввод паспорта с повторной попыткой в случае ошибки
-        passport = getPassport(passport);
-        if (passport == null) return;  // Прерывание метода
-
-        // Создание DTO и сущности после успешного ввода всех данных
-        GuestEntity guest = new GuestEntity(firstName, age, passport, address);
-        guest.setId(id);
-
-        repositoryGuest.update(guest);
-
+    public void readGuests() throws IOException {
+        repositoryGuest.readAll();
     }
 }
 
