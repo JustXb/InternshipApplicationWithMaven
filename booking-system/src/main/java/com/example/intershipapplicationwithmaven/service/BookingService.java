@@ -1,15 +1,12 @@
 package com.example.intershipapplicationwithmaven.service;
 
 
-import com.example.intershipapplicationwithmaven.exception.GuestNotFoundException;
-import com.example.intershipapplicationwithmaven.exception.HotelUnavailableException;
 import com.example.intershipapplicationwithmaven.repository.entity.BookingEntity;
 import com.example.intershipapplicationwithmaven.repository.entity.GuestEntity;
 import com.example.intershipapplicationwithmaven.repository.impl.BookingCsvRepository;
 import com.example.intershipapplicationwithmaven.repository.impl.GuestCsvRepository;
 import com.example.intershipapplicationwithmaven.transport.client.impl.MonitoringSocketClientImpl;
 import com.example.intershipapplicationwithmaven.transport.dto.request.GuestDTO;
-import com.example.intershipapplicationwithmaven.util.Config;
 import com.example.intershipapplicationwithmaven.util.CsvParser;
 import com.example.intershipapplicationwithmaven.util.Mapper;
 
@@ -27,7 +24,6 @@ import java.util.logging.Logger;
 
 @Service
 public class BookingService {
-    private final Config config = new Config();
     private final GuestCsvRepository repositoryGuest;
     private final BookingCsvRepository repositoryBooking;
     private final Mapper mapper = new Mapper();
@@ -171,7 +167,7 @@ public class BookingService {
     }
 
 
-    public void checkIn() throws HotelUnavailableException, GuestNotFoundException {
+    public void checkIn(){
         try {
             int idGuest = selectGuestToCheckIn();
             if (validateCheckInGuest(idGuest)) {

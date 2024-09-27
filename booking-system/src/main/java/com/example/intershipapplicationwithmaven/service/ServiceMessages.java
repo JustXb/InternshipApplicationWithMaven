@@ -23,7 +23,6 @@ public enum ServiceMessages {
 
     ERROR_MESSAGE_EMPTY_ID("Поле ID не может быть пустым"),
 
-
     UNKNOWN_ERROR("Неизвестная ошибка: "),
     REQUEST_TO_HOTEL_SYSTEM("Реквест к сервису отелей");
 

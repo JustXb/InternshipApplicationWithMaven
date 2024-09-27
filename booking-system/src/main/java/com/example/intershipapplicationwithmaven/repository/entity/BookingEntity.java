@@ -6,7 +6,6 @@ public class BookingEntity extends Entity {
     private int hotelId;
 
     public BookingEntity(int id, int guestId, int hotelId) {
-        this.id = id;
         this.guestId = guestId;
         this.hotelId = hotelId;
     }
