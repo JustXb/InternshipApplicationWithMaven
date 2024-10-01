@@ -3,12 +3,10 @@ package com.example.intershipapplicationwithmaven.service;
 
 import com.example.intershipapplicationwithmaven.repository.entity.BookingEntity;
 import com.example.intershipapplicationwithmaven.repository.entity.GuestEntity;
-import com.example.intershipapplicationwithmaven.repository.impl.BookingCsvRepository;
-import com.example.intershipapplicationwithmaven.repository.impl.GuestCsvRepository;
+import com.example.intershipapplicationwithmaven.repository.impl.BookingRepository;
 import com.example.intershipapplicationwithmaven.repository.impl.GuestRepository;
 import com.example.intershipapplicationwithmaven.transport.client.impl.MonitoringSocketClientImpl;
 import com.example.intershipapplicationwithmaven.transport.dto.request.GuestDTO;
-import com.example.intershipapplicationwithmaven.util.CsvParser;
 import com.example.intershipapplicationwithmaven.util.Mapper;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,24 +24,22 @@ import java.util.logging.Logger;
 @Service
 public class BookingService {
     private final GuestRepository guestRepository;
-    private final GuestCsvRepository repositoryGuest;
-    private final BookingCsvRepository repositoryBooking;
+    private final BookingRepository bookingRepository;
+
     private final Mapper mapper = new Mapper();
     private final Scanner scanner;
-    private final CsvParser csvParserBooking;
-    private final CsvParser csvParserGuest;
+
     private final Logger LOGGER = Logger.getLogger(BookingService.class.getName());
     private final MonitoringSocketClientImpl monitoringSocketClient;
 
     @Autowired
-    public BookingService(GuestRepository guestRepository, GuestCsvRepository repositoryGuest, BookingCsvRepository repositoryBooking,
-                          CsvParser csvParserBooking, CsvParser csvParserGuest, MonitoringSocketClientImpl monitoringSocketClient) {
+    public BookingService(BookingRepository bookingRepository, GuestRepository guestRepository,
+                           MonitoringSocketClientImpl monitoringSocketClient) {
         this.guestRepository = guestRepository;
-        this.repositoryGuest = repositoryGuest;
-        this.repositoryBooking = repositoryBooking;
+        this.bookingRepository = bookingRepository;
+
         this.scanner = new Scanner(System.in);
-        this.csvParserBooking = csvParserBooking;
-        this.csvParserGuest = csvParserGuest;
+
         this.monitoringSocketClient = monitoringSocketClient;
     }
 
@@ -55,7 +51,7 @@ public class BookingService {
 
         System.out.println("Если вы хотите закончить ввод - введите exit");
 
-        firstName = getFirstName(firstName);
+        firstName = getFirstName(null);
         if (firstName == null) return;  // Прерывание метода
 
         // Ввод возраста с повторной попыткой в случае ошибки
@@ -95,7 +91,6 @@ public class BookingService {
             GuestEntity guest = mapper.toEntity(guestDTO);
 
             if (validateCreateGuest(guest)) {
-                repositoryGuest.create(guest);
                 guestRepository.save(guest);
                 monitoringSocketClient.sendEvent(EventType.CREATED, "Гость добавлен: " + guest.toString());
             } else {
@@ -151,6 +146,25 @@ public class BookingService {
         return passport;
     }
 
+    private String getPassport(String passport, int id) {
+        while (passport == null) {
+            passport = getValidInput(ServiceMessages.ENTER_PASSPORT.getMessage(),
+                    ServiceMessages.ERROR_MESSAGE_EMPTY_PASSPORT.getMessage());
+
+            if (passport.equalsIgnoreCase("exit")) {
+                System.out.println("Введите help для получения помощи");
+                return null;
+            }
+
+            // Валидация паспорта
+            if (!validatePassportNumber(passport, id)) {
+                System.out.println(ServiceMessages.WRONG_PASSPORT.getMessage());
+                passport = null; // повторить ввод
+            }
+        }
+        return passport;
+    }
+
     private String getAddress(String address) {
         while (address == null) {
             address = getValidInput(ServiceMessages.ENTER_ADDRESS.getMessage(),
@@ -194,9 +208,9 @@ public class BookingService {
 
     }
 
-    private int selectGuestToCheckIn() throws IOException {
-        List<GuestEntity> guests = csvParserGuest.loadGuests();
-        for(GuestEntity guest : guests){
+    private int selectGuestToCheckIn() {
+        List<GuestEntity> guestEntities = guestRepository.findAll();
+        for(GuestEntity guest : guestEntities){
             guest.getInfo();
         }
         System.out.println(ServiceMessages.SELECT_GUEST.getMessage());
@@ -244,16 +258,28 @@ public class BookingService {
     private int selectHotelToCheckIn(BufferedReader in, PrintWriter out) throws IOException {
         String getAllHotelsResponse = in.readLine();
         System.out.println(getAllHotelsResponse);
-        System.out.println(ServiceMessages.ENTER_HOTEL.getMessage());
-        int idHotel = Integer.parseInt(scanner.nextLine());
-        out.println(idHotel); // Отправка запроса о доступности гостиницы
+        int idHotel = 0;
+        while (idHotel == 0) {
+            try {
+                String ageInput = getValidInput(ServiceMessages.ENTER_HOTEL.getMessage(),
+                        ServiceMessages.ERROR_MESSAGE_EMPTY_ID.getMessage());
+
+                idHotel = Integer.parseInt(ageInput);
+
+                out.println(idHotel);
+                return idHotel;
+            } catch (NumberFormatException e) {
+                System.out.println(ServiceMessages.ERROR_MESSAGE_ID_NOT_INT.getMessage());
+                idHotel = 0; // повторить ввод
+            }
+        }
         return idHotel;
     }
 
-    private void bookRoom(int guestId, int hotelId) throws IOException {
+    private void bookRoom(int guestId, int hotelId) {
         if (validateBookingDoubleCheckIn(guestId)){
             BookingEntity booking = new BookingEntity(guestId, hotelId);
-            repositoryBooking.create(booking);
+            bookingRepository.save(booking);
             System.out.println("Гость " + guestId + " успешно заселен в " + hotelId);
             monitoringSocketClient.sendEvent(EventType.CREATED, "Гость " + guestId +
                     " заселен в отель " + hotelId);
@@ -261,8 +287,8 @@ public class BookingService {
     }
 
 
-    private boolean validateBookingDoubleCheckIn(int guestId) throws IOException {
-        List<BookingEntity> bookings = csvParserBooking.loadBookings();
+    private boolean validateBookingDoubleCheckIn(int guestId)  {
+        List<BookingEntity> bookings = bookingRepository.findAll();
         for (BookingEntity booking : bookings) {
             if (booking.getGuestId() == guestId) {
                 System.out.println("Заселение отменено: гость уже заселен в отель " + booking.getHotelId());
@@ -274,15 +300,9 @@ public class BookingService {
         return true;
     }
 
-    private boolean validateCheckInGuest(int guestId) throws IOException {
+    private boolean validateCheckInGuest(int guestId){
         boolean isExist = false;
-        List<GuestEntity> guests = csvParserGuest.loadGuests();
-        for (GuestEntity guest : guests) {
-            if (guestId == guest.getId()) {
-                isExist = true;
-                break;
-            }
-        }
+        isExist = guestRepository.existsById(guestId);
 
         if(!isExist){
             System.out.println("Заселение отменено: гостя с таким ID не существует");
@@ -338,7 +358,7 @@ public class BookingService {
     private boolean validatePassportNumber(String passportNumber) throws IOException {
         if (passportNumber != null && passportNumber.length() == 6 && passportNumber.matches("\\d{6}")) {
             boolean passportExists = true;
-            List<GuestEntity> guests = csvParserGuest.loadGuests();
+            List<GuestEntity> guests = guestRepository.findAll();
             for (GuestEntity guest : guests) {
                 if (guest.getPassportNumber().equals(passportNumber)) {
                     System.out.println("Гость с такими паспортными данными уже существует");
@@ -353,59 +373,60 @@ public class BookingService {
         }
     }
 
-    private boolean validateAddress(String address){
+    private boolean validatePassportNumber(String passportNumber, int id) {
+        if (passportNumber != null && passportNumber.length() == 6 && passportNumber.matches("\\d{6}")) {
+            // Используем метод репозитория для проверки номера паспорта
+            boolean passportExists = guestRepository.existsByPassportNumberAndIdNot(passportNumber, id);
+            if (passportExists) {
+                System.out.println("Гость с такими паспортными данными уже существует");
+                return false;
+            }
+            return true;
+        } else {
+            System.out.println(ServiceMessages.WRONG_COUNT_NUMBER_PASSPORT.getMessage());
+            return false;
+        }
+    }
 
+
+    private boolean validateAddress(String address){
         return address != null && address.length() <= 30 && Character.isUpperCase(address.charAt(0));
     }
 
-    public void readGuest() throws IOException {
+    public void readGuest() {
         String idInput = getValidInput(ServiceMessages.ENTER_ID.getMessage(),
                 ServiceMessages.ERROR_MESSAGE_EMPTY_ID.getMessage());
         int id = Integer.parseInt(idInput);
-        if(!repositoryGuest.read(id).isEmpty()) {
-            System.out.println(repositoryGuest.read(id));
+        if(guestRepository.existsById(id)){
+            System.out.println(guestRepository.findById(id));
         }
         else{
             System.out.println("Гостя с таким ID не существует");
         }
-    }
 
-    public void deleteGuest() throws IOException {
-        String idInput = getValidInput(ServiceMessages.ENTER_ID.getMessage(),
-                ServiceMessages.ERROR_MESSAGE_EMPTY_ID.getMessage());
-        int id = Integer.parseInt(idInput);
-        if(!repositoryGuest.read(id).isEmpty()) {
-            repositoryGuest.delete(id);
-            guestRepository.deleteById(id);
-            List<GuestEntity> guests = csvParserGuest.loadGuests();
-            for (GuestEntity guest : guests) {
-                guest.getInfo();
-            }
-        }
-        else{
-            System.out.println("Гостя с таким ID не существует");
-        }
+
     }
 
     public void deleteGuestByDB(){
         String idInput = getValidInput(ServiceMessages.ENTER_ID.getMessage(),
                 ServiceMessages.ERROR_MESSAGE_EMPTY_ID.getMessage());
         int id = Integer.parseInt(idInput);
-        if(guestRepository.findById(id).isPresent()){
+        if(guestRepository.existsById(id)){
             guestRepository.deleteById(id);
         }
-
+        else{
+            System.out.println("Гостя с таким ID не существует");
+        }
     }
 
-
-    public void updateGuest() throws IOException {
+    public void updateGuest(){
         String idInput = getValidInput(ServiceMessages.ENTER_ID.getMessage(),
                 ServiceMessages.ERROR_MESSAGE_EMPTY_ID.getMessage());
         int id = Integer.parseInt(idInput);
 
-        if (!repositoryGuest.read(id).isEmpty()) {
+        if (guestRepository.existsById(id)) {
 
-            System.out.println(repositoryGuest.read(id));
+            System.out.println(guestRepository.findById(id));
             String firstName = null;
             int age = 0;
             String address = null;
@@ -444,23 +465,24 @@ public class BookingService {
             if (address == null) return;  // Прерывание метода
 
             // Ввод паспорта с повторной попыткой в случае ошибки
-            passport = getPassport(passport);
+            passport = getPassport(passport, id);
             if (passport == null) return;  // Прерывание метода
 
             // Создание DTO и сущности после успешного ввода всех данных
             GuestEntity guest = new GuestEntity(firstName, age, passport, address);
             guest.setId(id);
-
-            repositoryGuest.update(guest);
-            repositoryGuest.read(id);
+            guestRepository.save(guest);
         }
         else{
             System.out.println("Гостя с таким ID не существует");
         }
     }
 
-    public void readGuests() throws IOException {
-        repositoryGuest.readAll();
+    public void readGuests() {
+        List<GuestEntity> guests = guestRepository.findAllByOrderByIdAsc();
+        for (GuestEntity guest : guests) {
+            guest.getInfo();
+        }
     }
 }
 

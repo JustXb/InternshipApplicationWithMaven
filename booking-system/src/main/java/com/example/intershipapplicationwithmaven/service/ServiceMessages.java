@@ -22,6 +22,7 @@ public enum ServiceMessages {
     ENTER_ID("Введите ID гостя: "),
 
     ERROR_MESSAGE_EMPTY_ID("Поле ID не может быть пустым"),
+    ERROR_MESSAGE_ID_NOT_INT("Поле ID должно быть числом"),
 
     UNKNOWN_ERROR("Неизвестная ошибка: "),
     REQUEST_TO_HOTEL_SYSTEM("Реквест к сервису отелей");

@@ -33,13 +33,6 @@ public class GuestCsvRepository extends AbstractRepository<GuestEntity> {
         return guests.stream().filter(guest -> guest.getId() == id).findFirst();
     }
 
-    public void readAll() throws IOException {
-        List<GuestEntity> guests = csvParser.loadGuests();
-        for(GuestEntity guest : guests){
-            guest.getInfo();
-        }
-    }
-
     public void update(GuestEntity guestEntity) throws IOException {
         List<GuestEntity> guests = csvParser.loadGuests();
         for (int i = 0; i < guests.size(); i++) {

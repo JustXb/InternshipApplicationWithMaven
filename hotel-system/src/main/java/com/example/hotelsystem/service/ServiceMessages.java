@@ -6,7 +6,10 @@ public enum ServiceMessages {
     AVAILABLE("AVAILABLE"),
     UNAVAILABLE("UNAVAILABLE"),
     UNAVAILABLE_NOAVAILABILITY("UNAVAILABLE_NOAVAILABILITY"),
-    WRONG_HOTEL("Такого отеля не существует");
+    WRONG_HOTEL("Такого отеля не существует"),
+    ENTER_ID("Введите ID гостя: "),
+
+    ERROR_MESSAGE_EMPTY_ID("Поле ID не может быть пустым");
 
 
 
