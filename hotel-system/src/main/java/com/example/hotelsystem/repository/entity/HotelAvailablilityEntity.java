@@ -1,6 +1,11 @@
 package com.example.hotelsystem.repository.entity;
 
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+
+@Document(collection = "availability")
 public class HotelAvailablilityEntity {
+    @Id
     private int id;
     private int availability;
 

@@ -50,7 +50,7 @@ public class ConsoleScanner {
                         bookingService.updateGuest();
                         break;
                     case DELETE:
-                        bookingService.deleteGuest();
+                        bookingService.deleteGuestByDB();
                         break;
                     case CHECKIN:
                         bookingService.checkIn();

@@ -5,6 +5,7 @@ import com.example.intershipapplicationwithmaven.repository.entity.BookingEntity
 import com.example.intershipapplicationwithmaven.repository.entity.GuestEntity;
 import com.example.intershipapplicationwithmaven.repository.impl.BookingCsvRepository;
 import com.example.intershipapplicationwithmaven.repository.impl.GuestCsvRepository;
+import com.example.intershipapplicationwithmaven.repository.impl.GuestRepository;
 import com.example.intershipapplicationwithmaven.transport.client.impl.MonitoringSocketClientImpl;
 import com.example.intershipapplicationwithmaven.transport.dto.request.GuestDTO;
 import com.example.intershipapplicationwithmaven.util.CsvParser;
@@ -24,6 +25,7 @@ import java.util.logging.Logger;
 
 @Service
 public class BookingService {
+    private final GuestRepository guestRepository;
     private final GuestCsvRepository repositoryGuest;
     private final BookingCsvRepository repositoryBooking;
     private final Mapper mapper = new Mapper();
@@ -34,8 +36,9 @@ public class BookingService {
     private final MonitoringSocketClientImpl monitoringSocketClient;
 
     @Autowired
-    public BookingService(GuestCsvRepository repositoryGuest, BookingCsvRepository repositoryBooking,
+    public BookingService(GuestRepository guestRepository, GuestCsvRepository repositoryGuest, BookingCsvRepository repositoryBooking,
                           CsvParser csvParserBooking, CsvParser csvParserGuest, MonitoringSocketClientImpl monitoringSocketClient) {
+        this.guestRepository = guestRepository;
         this.repositoryGuest = repositoryGuest;
         this.repositoryBooking = repositoryBooking;
         this.scanner = new Scanner(System.in);
@@ -93,6 +96,7 @@ public class BookingService {
 
             if (validateCreateGuest(guest)) {
                 repositoryGuest.create(guest);
+                guestRepository.save(guest);
                 monitoringSocketClient.sendEvent(EventType.CREATED, "Гость добавлен: " + guest.toString());
             } else {
                 monitoringSocketClient.sendEvent(EventType.MISTAKE, "Добавление гостя " + guest.toString() + " неудачно");
@@ -372,6 +376,7 @@ public class BookingService {
         int id = Integer.parseInt(idInput);
         if(!repositoryGuest.read(id).isEmpty()) {
             repositoryGuest.delete(id);
+            guestRepository.deleteById(id);
             List<GuestEntity> guests = csvParserGuest.loadGuests();
             for (GuestEntity guest : guests) {
                 guest.getInfo();
@@ -380,6 +385,16 @@ public class BookingService {
         else{
             System.out.println("Гостя с таким ID не существует");
         }
+    }
+
+    public void deleteGuestByDB(){
+        String idInput = getValidInput(ServiceMessages.ENTER_ID.getMessage(),
+                ServiceMessages.ERROR_MESSAGE_EMPTY_ID.getMessage());
+        int id = Integer.parseInt(idInput);
+        if(guestRepository.findById(id).isPresent()){
+            guestRepository.deleteById(id);
+        }
+
     }
 
 

@@ -1,11 +1,21 @@
 package com.example.intershipapplicationwithmaven.repository.entity;
 
+import javax.persistence.*;
+
+@javax.persistence.Entity
+@Table(name = "guests")
 public class GuestEntity extends Entity {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+    @Column(nullable = false)
     private String name;
+    @Column(nullable = false)
     private int age;
+    @Column(nullable = false)
     private String passportNumber;
+    @Column(nullable = false)
     private String address;
 
     public GuestEntity(int id, String name, int age, String passportNumber, String address) {

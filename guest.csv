@@ -1,8 +1,10 @@
 ID,Name,Age,PassportNumber,Address
-1,Rus,21,123455,Moscow
 3,Nikita,28,774411,Moscow
 4,Manya,60,102030,Tyumen
 5,Egor,15,159753,Moscow
 6,Sonya,3,888888,Ramenskoe
 7,Leonid,20,112255,Rostov
 8,RRrr,22,115599,Rrrr
+8,Kirill,21,112288,Moscow
+8,Ruslan,21,123789,Moscow
+9,Gggg,22,224466,Fffff

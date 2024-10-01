@@ -1,5 +1,7 @@
 package com.example.hotelsystem.service;
 
+import com.example.hotelsystem.repository.impl.HotelAvailabilityRepository;
+import com.example.hotelsystem.repository.impl.HotelRepository;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.example.hotelsystem.repository.entity.HotelAvailablilityEntity;
@@ -15,10 +17,13 @@ import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.List;
+import java.util.Optional;
 import java.util.logging.Logger;
 
 @Service
 public class HotelService {
+    private final HotelRepository hotelRepository;
+    private final HotelAvailabilityRepository hotelAvailabilityRepository;
 
     private final int port;
     private final HotelJsonRepository hotelJsonRepository;
@@ -27,8 +32,10 @@ public class HotelService {
     private final Config config;
 
     @Autowired
-    public HotelService(HotelJsonRepository hotelJsonRepository, HotelServer hotelServer, Config config,
+    public HotelService(HotelAvailabilityRepository hotelAvailabilityRepository, HotelRepository hotelRepository,HotelJsonRepository hotelJsonRepository, HotelServer hotelServer, Config config,
                         @Value("${processor.port}") int port) {
+        this.hotelAvailabilityRepository = hotelAvailabilityRepository;
+        this.hotelRepository = hotelRepository;
         this.hotelJsonRepository = hotelJsonRepository;
         this.hotelServer = hotelServer;
         this.config = config;
@@ -38,6 +45,11 @@ public class HotelService {
     public void responseHotels() {
         try (ServerSocket serverSocket = new ServerSocket(port)) {
             List<HotelEntity> hotels = hotelJsonRepository.loadHotelsFromFile();
+            hotelRepository.saveAll(hotels);
+            ObjectMapper objectMapper = new ObjectMapper();
+            List<HotelAvailablilityEntity> hotelsAvailability = objectMapper.readValue
+                    (new File("HotelsAvailability.json"), new TypeReference<List<HotelAvailablilityEntity>>() {});
+            hotelAvailabilityRepository.saveAll(hotelsAvailability);
             String result = getString(hotels);
 
             LOGGER.info(ServiceMessages.WAITING_CONNECT.getMessage());
@@ -49,6 +61,10 @@ public class HotelService {
                     out.println(result);
 
                     int hotelId = Integer.parseInt(in.readLine());
+//                    Optional<HotelAvailablilityEntity> hotel = null;
+//                    if(hotelAvailabilityRepository.findById(hotelId).isPresent()){
+//                        hotel = hotelAvailabilityRepository.findById(hotelId);
+//                    }
                     HotelAvailablilityEntity hotel = hotelJsonRepository.readHotelFromFile(hotelId);
                     LOGGER.info(ServiceMessages.REQUEST_HOTEL_AVAILABILITY.getMessage() + hotelId);
 
