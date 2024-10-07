@@ -33,55 +33,55 @@ public class HotelService {
         this.port = port;
     }
 
-    public void responseHotels() {
-        try (ServerSocket serverSocket = new ServerSocket(port)) {
-            List<HotelEntity> hotels = hotelRepository.findAll();
-            String result = getString(hotels);
-
-            LOGGER.info(ServiceMessages.WAITING_CONNECT.getMessage());
-
-            while (true) {
-                try (Socket clientSocket = serverSocket.accept();
-                     PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
-                     BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()))) {
-                    out.println(result);
-
-                    int hotelId = Integer.parseInt(in.readLine());
-
-
-                    Optional<HotelAvailablilityEntity> hotel = Optional.empty();
-                    HotelAvailablilityEntity hotelAvailability = null;
-                    if(hotelAvailabilityRepository.existsById(hotelId)){
-                        hotel = hotelAvailabilityRepository.findById(hotelId);
-                        hotelAvailability = hotel.get();
-                    }
-                    else{
-                        out.println(ServiceMessages.UNAVAILABLE.getMessage());
-                    }
-                    LOGGER.info(ServiceMessages.REQUEST_HOTEL_AVAILABILITY.getMessage() + hotelId);
-
-                    if (isHotelAvailable(hotelId)) {
-                        out.println(ServiceMessages.AVAILABLE.getMessage());
-                    } else {
-                        if (hotel == null) {
-                            out.println(ServiceMessages.UNAVAILABLE.getMessage());
-                        } else
-                            if (!hotelAvailability.decreaseAvailableRooms()) {
-                                out.println(ServiceMessages.UNAVAILABLE_NOAVAILABILITY.getMessage());
-                            } else {
-                                hotelAvailabilityRepository.save(hotelAvailability);
-                                out.println(ServiceMessages.AVAILABLE.getMessage());
-                            }
-
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
+//    public void responseHotels() {
+//        try (ServerSocket serverSocket = new ServerSocket(port)) {
+//            List<HotelEntity> hotels = hotelRepository.findAll();
+//            String result = getString(hotels);
+//
+//            LOGGER.info(ServiceMessages.WAITING_CONNECT.getMessage());
+//
+//            while (true) {
+//                try (Socket clientSocket = serverSocket.accept();
+//                     PrintWriter out = new PrintWriter(clientSocket.getOutputStream(), true);
+//                     BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()))) {
+//                    out.println(result);
+//
+//                    int hotelId = Integer.parseInt(in.readLine());
+//
+//
+//                    Optional<HotelAvailablilityEntity> hotel = Optional.empty();
+//                    HotelAvailablilityEntity hotelAvailability = null;
+//                    if(hotelAvailabilityRepository.existsById(hotelId)){
+//                        hotel = hotelAvailabilityRepository.findById(hotelId);
+//                        hotelAvailability = hotel.get();
+//                    }
+//                    else{
+//                        out.println(ServiceMessages.UNAVAILABLE.getMessage());
+//                    }
+//                    LOGGER.info(ServiceMessages.REQUEST_HOTEL_AVAILABILITY.getMessage() + hotelId);
+//
+//                    if (isHotelAvailable(hotelId)) {
+//                        out.println(ServiceMessages.AVAILABLE.getMessage());
+//                    } else {
+//                        if (hotel == null) {
+//                            out.println(ServiceMessages.UNAVAILABLE.getMessage());
+//                        } else
+//                            if (!hotelAvailability.decreaseAvailableRooms()) {
+//                                out.println(ServiceMessages.UNAVAILABLE_NOAVAILABILITY.getMessage());
+//                            } else {
+//                                hotelAvailabilityRepository.save(hotelAvailability);
+//                                out.println(ServiceMessages.AVAILABLE.getMessage());
+//                            }
+//
+//                    }
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//    }
 
     private static String getString(List<HotelEntity> hotels) {
         StringBuilder sb = new StringBuilder();
@@ -93,7 +93,7 @@ public class HotelService {
     }
 
 
-    private boolean isHotelAvailable(int id) {
+    public boolean isHotelAvailable(int id) {
         // Проверка, существует ли отель с указанным ID в базе MongoDB
         Optional<HotelEntity> hotelOpt = hotelRepository.findById(id);
 
@@ -116,4 +116,7 @@ public class HotelService {
     }
 
 
+    public List<HotelEntity> getAllHotels() {
+        return hotelRepository.findAll();
+    }
 }

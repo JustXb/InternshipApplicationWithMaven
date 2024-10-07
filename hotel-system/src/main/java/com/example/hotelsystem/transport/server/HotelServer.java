@@ -1,6 +1,5 @@
 package com.example.hotelsystem.transport.server;
 
-import com.example.hotelsystem.repository.impl.HotelJsonRepository;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
@@ -10,10 +9,8 @@ import java.net.Socket;
 @Component
 public class HotelServer {
 
-    private final HotelJsonRepository hotelJsonRepository;
 
-    public HotelServer(HotelJsonRepository hotelJsonRepository) {
-        this.hotelJsonRepository = hotelJsonRepository;
+    public HotelServer() {
     }
 
     public void start() {

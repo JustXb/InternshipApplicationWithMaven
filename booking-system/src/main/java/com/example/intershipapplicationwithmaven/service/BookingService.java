@@ -10,7 +10,9 @@ import com.example.intershipapplicationwithmaven.transport.dto.request.GuestDTO;
 import com.example.intershipapplicationwithmaven.util.Mapper;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -34,12 +36,10 @@ public class BookingService {
 
     @Autowired
     public BookingService(BookingRepository bookingRepository, GuestRepository guestRepository,
-                           MonitoringSocketClientImpl monitoringSocketClient) {
+                          MonitoringSocketClientImpl monitoringSocketClient) {
         this.guestRepository = guestRepository;
         this.bookingRepository = bookingRepository;
-
         this.scanner = new Scanner(System.in);
-
         this.monitoringSocketClient = monitoringSocketClient;
     }
 
@@ -185,7 +185,7 @@ public class BookingService {
     }
 
 
-    public void checkIn(){
+    public void checkIn() {
         try {
             int idGuest = selectGuestToCheckIn();
             if (validateCheckInGuest(idGuest)) {
@@ -210,7 +210,7 @@ public class BookingService {
 
     private int selectGuestToCheckIn() {
         List<GuestEntity> guestEntities = guestRepository.findAll();
-        for(GuestEntity guest : guestEntities){
+        for (GuestEntity guest : guestEntities) {
             guest.getInfo();
         }
         System.out.println(ServiceMessages.SELECT_GUEST.getMessage());
@@ -242,12 +242,11 @@ public class BookingService {
         if ("AVAILABLE".equals(getAvailabilityResponse)) {
             bookRoom(idGuest, idHotel);
         } else {
-            if("UNAVAILABLE".equals(getAvailabilityResponse)){
+            if ("UNAVAILABLE".equals(getAvailabilityResponse)) {
                 System.out.println("Такого отеля не существует");
                 monitoringSocketClient.sendEvent(EventType.MISTAKE, "Гостиница " + idHotel +
                         " недоступна. Заявка отменена.");
-            }
-            else{
+            } else {
                 System.out.println("В этом отеле нет мест");
                 monitoringSocketClient.sendEvent(EventType.MISTAKE, "Гостиница " + idHotel +
                         " недоступна. Заявка отменена.");
@@ -276,68 +275,88 @@ public class BookingService {
         return idHotel;
     }
 
-    private void bookRoom(int guestId, int hotelId) {
-        if (validateBookingDoubleCheckIn(guestId)){
-            BookingEntity booking = new BookingEntity(guestId, hotelId);
-            bookingRepository.save(booking);
-            System.out.println("Гость " + guestId + " успешно заселен в " + hotelId);
-            monitoringSocketClient.sendEvent(EventType.CREATED, "Гость " + guestId +
-                    " заселен в отель " + hotelId);
-        }
+    public void bookRoom(int guestId, int hotelId) {
+        BookingEntity booking = new BookingEntity(guestId, hotelId);
+        bookingRepository.save(booking);
+        System.out.println("Гость " + guestId + " успешно заселен в отель " + hotelId);
     }
 
+    public boolean validateCheckInGuest(int guestId) {
+        return guestRepository.existsById(guestId);
+    }
 
-    private boolean validateBookingDoubleCheckIn(int guestId)  {
+    public boolean validateBookingDoubleCheckIn(int guestId) {
         List<BookingEntity> bookings = bookingRepository.findAll();
         for (BookingEntity booking : bookings) {
             if (booking.getGuestId() == guestId) {
-                System.out.println("Заселение отменено: гость уже заселен в отель " + booking.getHotelId());
-                monitoringSocketClient.sendEvent(EventType.MISTAKE,"Заселение отменено: гость уже заселен в" +
-                        " отель " + booking.getHotelId());
                 return false;
             }
         }
         return true;
     }
 
-    private boolean validateCheckInGuest(int guestId){
-        boolean isExist = false;
-        isExist = guestRepository.existsById(guestId);
-
-        if(!isExist){
-            System.out.println("Заселение отменено: гостя с таким ID не существует");
-            monitoringSocketClient.sendEvent(EventType.MISTAKE,"Заселение отменено: гостя с таким ID не существует");
-        }
-        return isExist;
-    }
+//    public void bookRoom(int guestId, int hotelId) {
+//        if (validateBookingDoubleCheckIn(guestId)) {
+//            BookingEntity booking = new BookingEntity(guestId, hotelId);
+//            bookingRepository.save(booking);
+//            System.out.println("Гость " + guestId + " успешно заселен в " + hotelId);
+//            monitoringSocketClient.sendEvent(EventType.CREATED, "Гость " + guestId +
+//                    " заселен в отель " + hotelId);
+//        }
+//    }
+//
+//
+//    public boolean validateBookingDoubleCheckIn(int guestId) {
+//        List<BookingEntity> bookings = bookingRepository.findAll();
+//        for (BookingEntity booking : bookings) {
+//            if (booking.getGuestId() == guestId) {
+//                System.out.println("Заселение отменено: гость уже заселен в отель " + booking.getHotelId());
+//                monitoringSocketClient.sendEvent(EventType.MISTAKE, "Заселение отменено: гость уже заселен в" +
+//                        " отель " + booking.getHotelId());
+//                return false;
+//            }
+//        }
+//        return true;
+//    }
+//
+//    public boolean validateCheckInGuest(int guestId) {
+//        boolean isExist = false;
+//        isExist = guestRepository.existsById(guestId);
+//
+//        if (!isExist) {
+//            System.out.println("Заселение отменено: гостя с таким ID не существует");
+//            monitoringSocketClient.sendEvent(EventType.MISTAKE, "Заселение отменено: гостя с таким ID не существует");
+//        }
+//        return isExist;
+//    }
 
     public boolean validateCreateGuest(GuestEntity guestEntity) throws IOException {
-        if(!validateName(guestEntity.getName())){
+        if (!validateName(guestEntity.getName())) {
             System.out.println(ServiceMessages.WRONG_NAME.getMessage());
             return false;
         }
-        if(!validateAge(guestEntity.getAge())){
+        if (!validateAge(guestEntity.getAge())) {
             System.out.println(ServiceMessages.WRONG_AGE.getMessage());
             return false;
         }
 
-        if (!validateAddress(guestEntity.getAddress())){
+        if (!validateAddress(guestEntity.getAddress())) {
             System.out.println(ServiceMessages.WRONG_ADDRESS.getMessage());
             return false;
         }
 
-        if(!validatePassportNumber(guestEntity.getPassportNumber())){
+        if (!validatePassportNumber(guestEntity.getPassportNumber())) {
             System.out.println(ServiceMessages.WRONG_PASSPORT.getMessage());
             return false;
         }
         return true;
     }
 
-    private boolean validateName(String name){
+    private boolean validateName(String name) {
         return name != null && name.length() <= 20 && Character.isUpperCase(name.charAt(0));
     }
 
-    private boolean validateAge(int age){
+    private boolean validateAge(int age) {
         return age >= 0 && age <= 120;
     }
 
@@ -352,7 +371,6 @@ public class BookingService {
         } while (input.isEmpty());
         return input;
     }
-
 
 
     private boolean validatePassportNumber(String passportNumber) throws IOException {
@@ -389,7 +407,7 @@ public class BookingService {
     }
 
 
-    private boolean validateAddress(String address){
+    private boolean validateAddress(String address) {
         return address != null && address.length() <= 30 && Character.isUpperCase(address.charAt(0));
     }
 
@@ -397,29 +415,27 @@ public class BookingService {
         String idInput = getValidInput(ServiceMessages.ENTER_ID.getMessage(),
                 ServiceMessages.ERROR_MESSAGE_EMPTY_ID.getMessage());
         int id = Integer.parseInt(idInput);
-        if(guestRepository.existsById(id)){
+        if (guestRepository.existsById(id)) {
             System.out.println(guestRepository.findById(id));
-        }
-        else{
+        } else {
             System.out.println("Гостя с таким ID не существует");
         }
 
 
     }
 
-    public void deleteGuestByDB(){
+    public void deleteGuestByDB() {
         String idInput = getValidInput(ServiceMessages.ENTER_ID.getMessage(),
                 ServiceMessages.ERROR_MESSAGE_EMPTY_ID.getMessage());
         int id = Integer.parseInt(idInput);
-        if(guestRepository.existsById(id)){
+        if (guestRepository.existsById(id)) {
             guestRepository.deleteById(id);
-        }
-        else{
+        } else {
             System.out.println("Гостя с таким ID не существует");
         }
     }
 
-    public void updateGuest(){
+    public void updateGuest() {
         String idInput = getValidInput(ServiceMessages.ENTER_ID.getMessage(),
                 ServiceMessages.ERROR_MESSAGE_EMPTY_ID.getMessage());
         int id = Integer.parseInt(idInput);
@@ -472,8 +488,7 @@ public class BookingService {
             GuestEntity guest = new GuestEntity(firstName, age, passport, address);
             guest.setId(id);
             guestRepository.save(guest);
-        }
-        else{
+        } else {
             System.out.println("Гостя с таким ID не существует");
         }
     }
@@ -484,5 +499,45 @@ public class BookingService {
             guest.getInfo();
         }
     }
-}
 
+    public List<GuestEntity> getAllGuests() {
+        return guestRepository.findAllByOrderByIdAsc();
+    }
+
+    public GuestEntity getGuestByID(int id) {
+        return guestRepository.findById(id).get();
+    }
+
+    public void addGuest(GuestEntity guestEntity) throws IOException {
+        if (validateCreateGuest(guestEntity)) {
+            guestRepository.save(guestEntity);
+        } else {
+            // Если валидация не прошла, бросаем исключение с соответствующим статусом и сообщением
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Некорректные данные гостя");
+        }
+    }
+
+    public void deleteGuestHttp(int id) {
+        if (guestRepository.existsById(id)) {
+            guestRepository.deleteById(id);
+        } else {
+            System.out.println("Гостя с таким ID не существует");
+        }
+    }
+
+    public void updateGuestHttp(int id, GuestEntity guest) {
+        if (guestRepository.existsById(id)) {
+            boolean passportExists = guestRepository.existsByPassportNumberAndIdNot(guest.getPassportNumber(), id);
+            if (passportExists) {
+                System.out.println("Гость с такими паспортными данными уже существует");
+            }
+            else{
+                guest.setId(id);
+                guestRepository.save(guest);
+            }
+        }
+        else {
+            System.out.println("Гостя с таким ID не существует");
+        }
+    }
+}
