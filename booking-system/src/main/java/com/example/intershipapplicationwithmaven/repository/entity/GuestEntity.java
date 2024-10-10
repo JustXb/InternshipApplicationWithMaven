@@ -1,6 +1,7 @@
 package com.example.intershipapplicationwithmaven.repository.entity;
 
 import javax.persistence.*;
+import java.util.List;
 
 @javax.persistence.Entity
 @Table(name = "guests")
@@ -17,6 +18,9 @@ public class GuestEntity extends Entity {
     private String passportNumber;
     @Column(nullable = false)
     private String address;
+
+    @OneToOne(mappedBy = "guest", cascade = CascadeType.ALL, orphanRemoval = true) // Связь с таблицей бронирований
+    private BookingEntity booking;
 
     public GuestEntity(int id, String name, int age, String passportNumber, String address) {
         this.id = id;
@@ -74,6 +78,10 @@ public class GuestEntity extends Entity {
 
     public void setAddress(String address) {
         this.address = address;
+    }
+
+    public BookingEntity getBooking() {
+        return booking;
     }
 
     public void getInfo() {

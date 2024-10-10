@@ -1,0 +1,45 @@
+Thu_Oct_10_15-21-55_MSK_2024 CREATED Гость добавлен: GuestEntity{id=12, name='Rus', age=8, passportNumber='115599', address='Moscow'}
+Thu_Oct_10_15-23-12_MSK_2024 CREATED Test event
+Thu_Oct_10_15-34-00_MSK_2024 MISTAKE Ошибка добавления гостя: Номер паспорта не валиден
+Thu_Oct_10_15-37-32_MSK_2024 SUCCESS Гость с ID 7 успешно обновлен.
+Thu_Oct_10_15-37-58_MSK_2024 SUCCESS Гость с ID 7 успешно обновлен.
+Thu_Oct_10_15-38-22_MSK_2024 SUCCESS Гость с ID 7 успешно обновлен.
+Thu_Oct_10_15-42-18_MSK_2024 MISTAKE Ошибка при удалении гостя с ID 99: No value present
+Thu_Oct_10_15-43-31_MSK_2024 MISTAKE Ошибка при удалении гостя с ID 11: null
+Thu_Oct_10_15-45-12_MSK_2024 MISTAKE Ошибка при удалении гостя с ID 11: null
+Thu_Oct_10_15-46-01_MSK_2024 MISTAKE Ошибка при удалении гостя с ID 11: null
+Thu_Oct_10_15-47-13_MSK_2024 MISTAKE Ошибка при удалении гостя с ID 11: null
+Thu_Oct_10_16-03-31_MSK_2024 MISTAKE Ошибка при удалении гостя с ID 111: No value present
+Thu_Oct_10_16-22-15_MSK_2024 MISTAKE Ошибка при удалении гостя с ID 111: No value present
+Thu_Oct_10_16-22-30_MSK_2024 MISTAKE Ошибка при удалении гостя с ID 111: No value present
+Thu_Oct_10_16-22-36_MSK_2024 MISTAKE Ошибка при удалении гостя с ID 11: null
+Thu_Oct_10_16-23-19_MSK_2024 MISTAKE Ошибка при удалении гостя с ID 11: null
+Thu_Oct_10_16-36-56_MSK_2024 MISTAKE Ошибка при удалении гостя с ID 111: Гость с ID 111 не найден.
+Thu_Oct_10_16-37-10_MSK_2024 MISTAKE Ошибка при удалении гостя с ID 11: У гостя с ID 11 нет активного бронирования.
+Thu_Oct_10_16-38-55_MSK_2024 MISTAKE Ошибка при удалении гостя с ID 111: Гость с ID 111 не найден.
+Thu_Oct_10_16-38-59_MSK_2024 MISTAKE Ошибка при удалении гостя с ID 11: I/O error on POST request for "http://localhost:8081/hotels/increaseAvailability": Connection refused: connect; nested exception is java.net.ConnectException: Connection refused: connect
+Thu_Oct_10_16-40-29_MSK_2024 MISTAKE Ошибка при удалении гостя с ID 11: Гость с ID 11 не найден.
+Thu_Oct_10_16-40-32_MSK_2024 MISTAKE Ошибка при удалении гостя с ID 12: I/O error on POST request for "http://localhost:8081/hotels/increaseAvailability": Connection refused: connect; nested exception is java.net.ConnectException: Connection refused: connect
+Thu_Oct_10_16-40-57_MSK_2024 MISTAKE Ошибка при удалении гостя с ID 10: I/O error on POST request for "http://localhost:8081/hotels/increaseAvailability": Connection refused: connect; nested exception is java.net.ConnectException: Connection refused: connect
+Thu_Oct_10_16-43-21_MSK_2024 MISTAKE Ошибка при заселении гостя с ID 8: I/O error on POST request for "http://localhost:8081/hotels/checkAvailability": Connection refused: connect; nested exception is java.net.ConnectException: Connection refused: connect
+Thu_Oct_10_16-43-35_MSK_2024 MISTAKE Ошибка при заселении гостя с ID 8: I/O error on POST request for "http://localhost:8081/hotels/checkAvailability": Connection refused: connect; nested exception is java.net.ConnectException: Connection refused: connect
+Thu_Oct_10_16-43-56_MSK_2024 MISTAKE Ошибка при заселении гостя с ID 8: I/O error on POST request for "http://localhost:8081/hotels/checkAvailability": Connection refused: connect; nested exception is java.net.ConnectException: Connection refused: connect
+Thu_Oct_10_16-46-02_MSK_2024 SUCCESS Гость с ID 8 успешно заселен в отель 2
+Thu_Oct_10_16-46-10_MSK_2024 SUCCESS Гость с ID 8 успешно удален. Доступность отеля 2 увеличена.
+Thu_Oct_10_16-46-18_MSK_2024 MISTAKE Ошибка при удалении гостя с ID 8: Гость с ID 8 не найден.
+Thu_Oct_10_16-46-26_MSK_2024 SUCCESS Гость с ID 7 успешно удален. Доступность отеля 1 увеличена.
+Thu_Oct_10_16-46-37_MSK_2024 SUCCESS Гость с ID 9 успешно удален. Доступность отеля 1 увеличена.
+Thu_Oct_10_16-47-41_MSK_2024 MISTAKE Ошибка при удалении гостя с ID 9: Гость с ID 9 не найден.
+Thu_Oct_10_16-47-51_MSK_2024 CREATED Гость добавлен: GuestEntity{id=13, name='Rus', age=8, passportNumber='120120', address='Moscow'}
+Thu_Oct_10_16-47-55_MSK_2024 CREATED Гость добавлен: GuestEntity{id=14, name='Rus', age=8, passportNumber='111111', address='Moscow'}
+Thu_Oct_10_16-47-58_MSK_2024 CREATED Гость добавлен: GuestEntity{id=15, name='Rus', age=8, passportNumber='123456', address='Moscow'}
+Thu_Oct_10_16-48-02_MSK_2024 CREATED Гость добавлен: GuestEntity{id=16, name='Rus', age=8, passportNumber='228855', address='Moscow'}
+Thu_Oct_10_16-48-21_MSK_2024 MISTAKE Ошибка при удалении гостя с ID 19: Гость с ID 19 не найден.
+Thu_Oct_10_16-48-28_MSK_2024 SUCCESS Гость с ID 16 успешно удален. Доступность отеля 1 увеличена.
+Thu_Oct_10_16-49-05_MSK_2024 SUCCESS Гость с ID 15 успешно удален. Доступность отеля -1 увеличена.
+Thu_Oct_10_16-49-29_MSK_2024 SUCCESS Гость с ID 14 успешно удален. Доступность отеля -1 увеличена.
+Thu_Oct_10_16-51-40_MSK_2024 CREATED Гость добавлен: GuestEntity{id=17, name='Rus', age=8, passportNumber='228855', address='Moscow'}
+Thu_Oct_10_16-51-45_MSK_2024 MISTAKE Ошибка добавления гостя: Номер паспорта не валиден
+Thu_Oct_10_16-53-01_MSK_2024 SUCCESS Гость с ID 17 успешно заселен в отель 2
+Thu_Oct_10_16-53-39_MSK_2024 SUCCESS Гость с ID 13 успешно удален. Гость не проживал в отеле.
+Thu_Oct_10_16-53-47_MSK_2024 SUCCESS Гость с ID 17 успешно удален. Доступность отеля 2 увеличена.

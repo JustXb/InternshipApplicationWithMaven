@@ -1,6 +1,6 @@
 package com.example.intershipapplicationwithmaven.transport.client.impl;
 
-import com.example.intershipapplicationwithmaven.service.EventType;
+import com.example.EventType;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 

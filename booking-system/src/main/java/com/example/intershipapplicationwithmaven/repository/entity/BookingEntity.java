@@ -1,36 +1,37 @@
 package com.example.intershipapplicationwithmaven.repository.entity;
 
 import javax.persistence.*;
+import javax.persistence.Entity;
 
-@javax.persistence.Entity
+@Entity
 @Table(name = "bookings")
-public class BookingEntity extends Entity {
+public class BookingEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @Column(nullable = false)
-    private int guestId;
+    @OneToOne
+    @JoinColumn(name = "guest_id", nullable = false)  // Связываем с таблицей гостей по столбцу guest_id
+    private GuestEntity guest;
 
     @Column(nullable = false)
     private int hotelId;
 
     // Constructors, Getters, and Setters
 
-    public BookingEntity(int id, int guestId, int hotelId) {
+    public BookingEntity(int id, GuestEntity guest, int hotelId) {
         this.id = id;
-        this.guestId = guestId;
+        this.guest = guest;
         this.hotelId = hotelId;
     }
 
-    public BookingEntity(int guestId, int hotelId) {
-        this.guestId = guestId;
+    public BookingEntity(GuestEntity guest, int hotelId) {
+        this.guest = guest;
         this.hotelId = hotelId;
     }
 
-    public BookingEntity() {
-    }
+    public BookingEntity() {}
 
     public int getId() {
         return id;
@@ -40,12 +41,12 @@ public class BookingEntity extends Entity {
         this.id = id;
     }
 
-    public int getGuestId() {
-        return guestId;
+    public GuestEntity getGuest() {
+        return guest;
     }
 
-    public void setGuestId(int guestId) {
-        this.guestId = guestId;
+    public void setGuest(GuestEntity guest) {
+        this.guest = guest;
     }
 
     public int getHotelId() {
@@ -60,7 +61,7 @@ public class BookingEntity extends Entity {
     public String toString() {
         return "BookingEntity{" +
                 "id=" + id +
-                ", guestId=" + guestId +
+                ", guestId=" + guest.getId() +  // Отображаем ID гостя
                 ", hotelId=" + hotelId +
                 '}';
     }

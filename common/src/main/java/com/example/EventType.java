@@ -1,4 +1,4 @@
-package com.example.monitoringsystem.transport.server;
+package com.example;
 
 public enum EventType {
     CREATED("Event = create"),

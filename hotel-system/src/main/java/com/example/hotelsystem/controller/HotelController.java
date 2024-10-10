@@ -52,4 +52,16 @@ public class HotelController {
         hotelAvailabilityRepository.save(availability);
         return ResponseEntity.ok("AVAILABLE");
     }
+
+    @PostMapping("/increaseAvailability")
+    public ResponseEntity<String> increaseAvailability(@RequestParam int hotelId){
+        Optional<HotelAvailablilityEntity> hotelAvailability = hotelAvailabilityRepository.findById(hotelId);
+        if (!hotelAvailability.isPresent()) {
+            return ResponseEntity.ok("UNAVAILABLE");
+        }
+        HotelAvailablilityEntity availability = hotelAvailability.get();
+        availability.setAvailability(availability.getAvailability()+1);
+        hotelAvailabilityRepository.save(availability);
+        return ResponseEntity.ok("Доступность мест в отеле увеличена на 1");
+    }
 }
