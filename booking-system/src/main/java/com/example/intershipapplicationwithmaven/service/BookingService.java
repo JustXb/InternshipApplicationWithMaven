@@ -3,6 +3,7 @@ package com.example.intershipapplicationwithmaven.service;
 
 import com.example.EventType;
 import com.example.MonitoringEvent;
+import com.example.intershipapplicationwithmaven.config.RabbitMQConfig;
 import com.example.intershipapplicationwithmaven.repository.entity.BookingEntity;
 import com.example.intershipapplicationwithmaven.repository.entity.GuestEntity;
 import com.example.intershipapplicationwithmaven.repository.impl.BookingRepository;
@@ -10,6 +11,7 @@ import com.example.intershipapplicationwithmaven.repository.impl.GuestRepository
 import com.example.intershipapplicationwithmaven.transport.dto.request.GuestDTO;
 import com.example.intershipapplicationwithmaven.util.Mapper;
 
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -32,14 +34,20 @@ public class BookingService {
 
     private final Mapper mapper = new Mapper();
     private final Scanner scanner;
+    RabbitTemplate rabbitTemplate;
+    RestTemplate restTemplate;
 
     private final Logger LOGGER = Logger.getLogger(BookingService.class.getName());
 
     @Autowired
-    public BookingService(BookingRepository bookingRepository, GuestRepository guestRepository) {
+    public BookingService(BookingRepository bookingRepository, GuestRepository guestRepository,
+                          RabbitTemplate rabbitTemplate) {
         this.guestRepository = guestRepository;
         this.bookingRepository = bookingRepository;
         this.scanner = new Scanner(System.in);
+        this.rabbitTemplate = rabbitTemplate;
+        this.restTemplate = new RestTemplate();
+
     }
 
     public void createGuest() {
@@ -395,7 +403,7 @@ public class BookingService {
             List<GuestEntity> guests = guestRepository.findAll();
             for (GuestEntity guest : guests) {
                 if (guest.getPassportNumber().equals(passportNumber)) {
-                    System.out.println("Гость с такими паспортными данными уже существует");
+                    System.out.println(ServiceMessages.EXISTING_GUEST.getMessage());
                     passportExists = false;
                     break;
                 }
@@ -412,7 +420,7 @@ public class BookingService {
             // Используем метод репозитория для проверки номера паспорта
             boolean passportExists = guestRepository.existsByPassportNumberAndIdNot(passportNumber, id);
             if (passportExists) {
-                System.out.println("Гость с такими паспортными данными уже существует");
+                System.out.println(ServiceMessages.WRONG_COUNT_NUMBER_PASSPORT.getMessage());
                 return false;
             }
             return true;
@@ -434,7 +442,7 @@ public class BookingService {
         if (guestRepository.existsById(id)) {
             System.out.println(guestRepository.findById(id));
         } else {
-            System.out.println("Гостя с таким ID не существует");
+            System.out.println(ServiceMessages.WRONG_GUEST_ID.getMessage());
         }
 
 
@@ -447,7 +455,7 @@ public class BookingService {
         if (guestRepository.existsById(id)) {
             guestRepository.deleteById(id);
         } else {
-            System.out.println("Гостя с таким ID не существует");
+            System.out.println(ServiceMessages.WRONG_GUEST_ID.getMessage());
         }
     }
 
@@ -539,7 +547,8 @@ public class BookingService {
         if (guestRepository.existsById(id)) {
             guestRepository.deleteById(id);
         } else {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Гостя с ID " + id + " не существует");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, ServiceMessages.GUEST_WITH_ID.getMessage() + id +
+                    ServiceMessages.NOT_FOUND.getMessage());
         }
     }
 
@@ -556,7 +565,8 @@ public class BookingService {
                 return 0;
             }
         } else {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Гость с ID " + guestId + " не найден.");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, ServiceMessages.GUEST_WITH_ID.getMessage()
+                    + guestId + ServiceMessages.NOT_FOUND.getMessage());
         }
     }
 
@@ -565,35 +575,38 @@ public class BookingService {
         if (guestRepository.existsById(id)) {
             boolean passportExists = guestRepository.existsByPassportNumberAndIdNot(guest.getPassportNumber(), id);
             if (passportExists) {
-                throw new ResponseStatusException(HttpStatus.CONFLICT, "Гость с паспортными данными " + guest.getPassportNumber() + " уже существует.");
+                throw new ResponseStatusException(HttpStatus.CONFLICT, ServiceMessages.GUEST_WITH_PASSPORT.getMessage() +
+                        guest.getPassportNumber() + ServiceMessages.EXIST.getMessage());
             } else {
                 guest.setId(id);
                 guestRepository.save(guest);
             }
         } else {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Гостя с ID " + id + " не существует");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, ServiceMessages.GUESTs_WITH_ID.getMessage() + id +
+                    ServiceMessages.NOT_FOUND.getMessage());
         }
     }
 
-    public ResponseEntity<String> validateCheckInHttp(int guestId, int hotelId){
+    public ResponseEntity<String> validateCheckInHttp(int guestId, int hotelId) {
 
         // Проверяем, существует ли гость
         if (!validateCheckInGuest(guestId)) {
-            return ResponseEntity.badRequest().body("Гостя с таким ID не существует.");
+            return ResponseEntity.badRequest().body(ServiceMessages.WRONG_GUEST_ID.getMessage());
         }
 
         // Проверяем, что гость еще не заселен
         if (!validateBookingDoubleCheckIn(guestId)) {
-            return ResponseEntity.badRequest().body("Гость уже заселен в другой отель.");
+            return ResponseEntity.badRequest().body(ServiceMessages.EXIST_CHECKIIN.getMessage());
         }
-        return null;
+
+        return ResponseEntity.ok(ServiceMessages.ACCESS_CHECKIN.getMessage()); // Если все проверки пройдены
     }
+
 
     public void sendEvent(EventType eventType, String message) {
         try {
             // Формируем тело запроса
             MonitoringEvent event = new MonitoringEvent(eventType, message);
-            RestTemplate restTemplate = new RestTemplate();
             // Отправляем POST-запрос на сервис мониторинга
             ResponseEntity<String> response = restTemplate.postForEntity("http://localhost:8082/log" + "/logEvent", event, String.class);
 
@@ -605,5 +618,12 @@ public class BookingService {
         } catch (Exception e) {
             System.out.println("Не удалось подключиться к сервису мониторинга: " + e.getMessage());
         }
+    }
+
+
+
+    public void sendBookingToMonitoring(EventType eventType, String message) {
+        MonitoringEvent event = new MonitoringEvent(eventType, message);
+        rabbitTemplate.convertAndSend(RabbitMQConfig.BOOKING_EXCHANGE_NAME, RabbitMQConfig.MONITORING_ROUTING_KEY, event);
     }
 }

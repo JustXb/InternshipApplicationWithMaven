@@ -1,5 +1,7 @@
 package com.example.intershipapplicationwithmaven.repository.entity;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import javax.persistence.*;
 import java.util.List;
 
@@ -20,6 +22,7 @@ public class GuestEntity extends Entity {
     private String address;
 
     @OneToOne(mappedBy = "guest", cascade = CascadeType.ALL, orphanRemoval = true) // Связь с таблицей бронирований
+    @JsonManagedReference // Указываем, что это управляемая ссылка
     private BookingEntity booking;
 
     public GuestEntity(int id, String name, int age, String passportNumber, String address) {

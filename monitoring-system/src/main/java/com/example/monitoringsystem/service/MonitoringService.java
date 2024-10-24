@@ -1,13 +1,13 @@
 package com.example.monitoringsystem.service;
 
 import com.example.EventType;
+import com.example.MonitoringEvent;
+import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
 import java.io.*;
-import java.net.ServerSocket;
-import java.net.Socket;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
@@ -73,4 +73,10 @@ public class MonitoringService {
         Files.move(logFile.toPath(), newLogFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
     }
 
+    @RabbitListener(queues = "bookingQueue")
+    public void receiveMessage(MonitoringEvent event) {
+        System.out.println("Получено сообщение: " + event);
+        logEvent(event.getEventType().toString(), event.getMessage());
+        // Логика обработки полученного сообщения
+    }
 }

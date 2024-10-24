@@ -1,5 +1,7 @@
 package com.example.intershipapplicationwithmaven.repository.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import javax.persistence.*;
 import javax.persistence.Entity;
 
@@ -13,6 +15,7 @@ public class BookingEntity {
 
     @OneToOne
     @JoinColumn(name = "guest_id", nullable = false)  // Связываем с таблицей гостей по столбцу guest_id
+    @JsonBackReference // Указываем, что это обратная ссылка
     private GuestEntity guest;
 
     @Column(nullable = false)

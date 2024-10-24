@@ -1,0 +1,9 @@
+Tue_Oct_22_12-48-16_MSK_2024 MISTAKE Ошибка добавления гостя: Номер паспорта не валиден
+Tue_Oct_22_12-48-22_MSK_2024 MISTAKE Ошибка добавления гостя: Номер паспорта не валиден
+Tue_Oct_22_12-48-53_MSK_2024 MISTAKE Ошибка добавления гостя: Номер паспорта не валиден
+Tue_Oct_22_12-51-18_MSK_2024 MISTAKE Ошибка добавления гостя: Номер паспорта не валиден
+Tue_Oct_22_12-52-32_MSK_2024 MISTAKE Ошибка добавления гостя: Номер паспорта не валиден
+Tue_Oct_22_12-52-32_MSK_2024 CREATED Гость добавлен: GuestEntity{id=24, name='Mike', age=21, passportNumber='102039', address='Moscow'}
+Tue_Oct_22_12-52-53_MSK_2024 MISTAKE Ошибка добавления гостя: Номер паспорта не валиден
+Tue_Oct_22_12-53-35_MSK_2024 CREATED Гость добавлен: GuestEntity{id=25, name='Mike', age=21, passportNumber='114488', address='Moscow'}
+Tue_Oct_22_12-55-22_MSK_2024 CREATED Гость добавлен: GuestEntity{id=26, name='Lexa', age=21, passportNumber='105122', address='Moscow'}

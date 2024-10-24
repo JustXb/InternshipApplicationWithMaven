@@ -1,0 +1,36 @@
+Fri_Oct_11_14-05-23_MSK_2024 SUCCESS Гость с ID 19 успешно удален. Гость не проживал в отеле.
+Fri_Oct_11_14-05-49_MSK_2024 MISTAKE Ошибка при заселении гостя с ID 18: I/O error on POST request for "http://localhost:8081/hotels/checkAvailability": Connection refused: connect; nested exception is java.net.ConnectException: Connection refused: connect
+Fri_Oct_11_14-16-17_MSK_2024 MISTAKE Ошибка заселения: сервис отелей недоступен.
+Fri_Oct_11_14-16-52_MSK_2024 SUCCESS Гость с ID 18 успешно заселен в отель 2
+Fri_Oct_11_14-16-58_MSK_2024 SUCCESS Гость с ID 18 успешно заселен в отель 1
+Fri_Oct_11_14-17-24_MSK_2024 MISTAKE Ошибка при заселении гостя с ID 18: More than one row with the given identifier was found: 18, for class: com.example.intershipapplicationwithmaven.repository.entity.GuestEntity; nested exception is org.hibernate.HibernateException: More than one row with the given identifier was found: 18, for class: com.example.intershipapplicationwithmaven.repository.entity.GuestEntity
+Fri_Oct_11_14-17-29_MSK_2024 MISTAKE Ошибка при заселении гостя с ID 18: More than one row with the given identifier was found: 18, for class: com.example.intershipapplicationwithmaven.repository.entity.GuestEntity; nested exception is org.hibernate.HibernateException: More than one row with the given identifier was found: 18, for class: com.example.intershipapplicationwithmaven.repository.entity.GuestEntity
+Fri_Oct_11_14-18-39_MSK_2024 MISTAKE Ошибка при заселении гостя с ID 99: No value present
+Fri_Oct_11_14-28-42_MSK_2024 MISTAKE Ошибка при заселении гостя с ID 99: No value present
+Fri_Oct_11_14-29-42_MSK_2024 MISTAKE Ошибка при заселении гостя с ID 2: No value present
+Fri_Oct_11_14-29-56_MSK_2024 MISTAKE Ошибка при заселении гостя с ID 18: More than one row with the given identifier was found: 18, for class: com.example.intershipapplicationwithmaven.repository.entity.GuestEntity; nested exception is org.hibernate.HibernateException: More than one row with the given identifier was found: 18, for class: com.example.intershipapplicationwithmaven.repository.entity.GuestEntity
+Fri_Oct_11_14-30-00_MSK_2024 MISTAKE Ошибка при заселении гостя с ID 18: More than one row with the given identifier was found: 18, for class: com.example.intershipapplicationwithmaven.repository.entity.GuestEntity; nested exception is org.hibernate.HibernateException: More than one row with the given identifier was found: 18, for class: com.example.intershipapplicationwithmaven.repository.entity.GuestEntity
+Fri_Oct_11_14-30-05_MSK_2024 MISTAKE Ошибка при заселении гостя с ID 19: No value present
+Fri_Oct_11_14-30-22_MSK_2024 MISTAKE Ошибка при заселении гостя с ID 20: More than one row with the given identifier was found: 18, for class: com.example.intershipapplicationwithmaven.repository.entity.BookingEntity; nested exception is org.hibernate.HibernateException: More than one row with the given identifier was found: 18, for class: com.example.intershipapplicationwithmaven.repository.entity.BookingEntity
+Fri_Oct_11_14-30-25_MSK_2024 MISTAKE Ошибка при заселении гостя с ID 20: More than one row with the given identifier was found: 18, for class: com.example.intershipapplicationwithmaven.repository.entity.BookingEntity; nested exception is org.hibernate.HibernateException: More than one row with the given identifier was found: 18, for class: com.example.intershipapplicationwithmaven.repository.entity.BookingEntity
+Fri_Oct_11_14-30-29_MSK_2024 MISTAKE Ошибка при заселении гостя с ID 20: More than one row with the given identifier was found: 18, for class: com.example.intershipapplicationwithmaven.repository.entity.BookingEntity; nested exception is org.hibernate.HibernateException: More than one row with the given identifier was found: 18, for class: com.example.intershipapplicationwithmaven.repository.entity.BookingEntity
+Fri_Oct_11_14-31-51_MSK_2024 SUCCESS Гость с ID 20 успешно заселен в отель 1
+Fri_Oct_11_14-32-13_MSK_2024 MISTAKE Ошибка заселения: Гость уже заселен в другой отель.
+Fri_Oct_11_14-32-19_MSK_2024 MISTAKE Ошибка заселения: Гость уже заселен в другой отель.
+Fri_Oct_11_14-32-22_MSK_2024 MISTAKE Ошибка заселения: Гость уже заселен в другой отель.
+Fri_Oct_11_14-32-27_MSK_2024 MISTAKE Ошибка заселения: Гость уже заселен в другой отель.
+Fri_Oct_11_14-33-04_MSK_2024 MISTAKE Ошибка добавления гостя: Номер паспорта не валиден
+Fri_Oct_11_14-33-14_MSK_2024 CREATED Гость добавлен: GuestEntity{id=21, name='Kir', age=120, passportNumber='123456', address='Moscow'}
+Fri_Oct_11_14-33-40_MSK_2024 CREATED Гость добавлен: GuestEntity{id=22, name='Mike', age=20, passportNumber='110022', address='Moscow'}
+Fri_Oct_11_14-33-47_MSK_2024 CREATED Гость добавлен: GuestEntity{id=23, name='Mike', age=20, passportNumber='998877', address='Moscow'}
+Fri_Oct_11_14-33-57_MSK_2024 MISTAKE Ошибка заселения: Гость уже заселен в другой отель.
+Fri_Oct_11_14-34-10_MSK_2024 MISTAKE Ошибка заселения: отель 5 недоступен.
+Fri_Oct_11_14-34-15_MSK_2024 MISTAKE Ошибка заселения: в отеле 3 нет свободных мест.
+Fri_Oct_11_14-34-19_MSK_2024 SUCCESS Гость с ID 22 успешно заселен в отель 1
+Fri_Oct_11_14-34-24_MSK_2024 MISTAKE Ошибка заселения: Гость уже заселен в другой отель.
+Fri_Oct_11_14-48-45_MSK_2024 MISTAKE Ошибка при удалении гостя с ID 1: Гость с ID 1 не найден.
+Fri_Oct_11_14-48-50_MSK_2024 MISTAKE Ошибка заселения: сервис отелей недоступен.
+Fri_Oct_11_14-51-32_MSK_2024 MISTAKE Ошибка заселения: сервис отелей недоступен.
+Fri_Oct_11_14-51-43_MSK_2024 SUCCESS Гость с ID 18 успешно удален. Доступность отеля 2 увеличена.
+Fri_Oct_11_14-51-53_MSK_2024 MISTAKE Ошибка при удалении гостя с ID 17: Гость с ID 17 не найден.
+Fri_Oct_11_14-52-07_MSK_2024 SUCCESS Гость с ID 21 успешно удален. Гость не проживал в отеле.

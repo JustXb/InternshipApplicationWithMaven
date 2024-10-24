@@ -1,0 +1,27 @@
+Thu_Oct_24_10-07-51_MSK_2024 SUCCESS Список гостей получен
+Thu_Oct_24_10-13-59_MSK_2024 CREATED Гость добавлен: GuestEntity{id=27, name='Leo', age=22, passportNumber='123465', address='Moscow'}
+Thu_Oct_24_10-14-55_MSK_2024 SUCCESS Список гостей получен
+Thu_Oct_24_10-19-12_MSK_2024 MISTAKE Ошибка заселения: в отеле 3 нет свободных мест.
+Thu_Oct_24_10-19-16_MSK_2024 MISTAKE Ошибка заселения: отель 4 недоступен.
+Thu_Oct_24_10-19-35_MSK_2024 SUCCESS Гость с ID 27 успешно заселен в отель 2
+Thu_Oct_24_10-27-29_MSK_2024 MISTAKE Ошибка добавления гостя: Номер паспорта не валиден
+Thu_Oct_24_10-27-33_MSK_2024 MISTAKE Ошибка добавления гостя: Номер паспорта не валиден
+Thu_Oct_24_10-27-40_MSK_2024 CREATED Гость добавлен: GuestEntity{id=28, name='Leo', age=22, passportNumber='125678', address='Moscow'}
+Thu_Oct_24_10-28-26_MSK_2024 MISTAKE Ошибка заселения: Гость уже заселен в другой отель.
+Thu_Oct_24_10-28-30_MSK_2024 MISTAKE Ошибка заселения: Гость уже заселен в другой отель.
+Thu_Oct_24_10-28-37_MSK_2024 MISTAKE Ошибка заселения: в отеле 3 нет свободных мест.
+Thu_Oct_24_10-28-57_MSK_2024 SUCCESS Гость с ID 28 успешно заселен в отель 1
+Thu_Oct_24_10-29-22_MSK_2024 SUCCESS Гость с ID 27 успешно удален. Доступность отеля 2 увеличена.
+Thu_Oct_24_10-29-39_MSK_2024 SUCCESS Гость с ID 28 успешно удален. Доступность отеля 1 увеличена.
+Thu_Oct_24_10-34-47_MSK_2024 CREATED Гость добавлен: GuestEntity{id=29, name='Leo', age=22, passportNumber='125678', address='Moscow'}
+Thu_Oct_24_10-34-53_MSK_2024 CREATED Гость добавлен: GuestEntity{id=30, name='Leo', age=22, passportNumber='135588', address='Moscow'}
+Thu_Oct_24_10-35-29_MSK_2024 SUCCESS Гость с ID 29 успешно заселен в отель 1
+Thu_Oct_24_10-35-50_MSK_2024 SUCCESS Гость с ID 29 успешно удален. Доступность отеля 1 увеличена.
+Thu_Oct_24_10-36-09_MSK_2024 SUCCESS Список гостей получен
+Thu_Oct_24_10-36-20_MSK_2024 SUCCESS Гость с ID 30 успешно удален. Гость не проживал в отеле.
+Thu_Oct_24_10-40-53_MSK_2024 SUCCESS Список гостей получен
+Thu_Oct_24_10-41-27_MSK_2024 CREATED Гость добавлен: GuestEntity{id=32, name='Leo', age=22, passportNumber='225511', address='Moscow'}
+Thu_Oct_24_10-42-38_MSK_2024 SUCCESS Гость с ID 31 успешно удален. Гость не проживал в отеле.
+Thu_Oct_24_10-42-38_MSK_2024 SUCCESS Список гостей получен
+Thu_Oct_24_10-42-38_MSK_2024 MISTAKE Ошибка при заселении гостя с ID 31: No value present
+Thu_Oct_24_10-42-38_MSK_2024 MISTAKE Ошибка заселения: сервис отелей недоступен.
