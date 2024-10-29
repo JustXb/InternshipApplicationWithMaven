@@ -4,6 +4,7 @@ package com.example.intershipapplicationwithmaven.service;
 import com.example.EventType;
 import com.example.MonitoringEvent;
 import com.example.intershipapplicationwithmaven.config.RabbitMQConfig;
+import com.example.intershipapplicationwithmaven.exception.EnteredNotValidDataException;
 import com.example.intershipapplicationwithmaven.repository.entity.BookingEntity;
 import com.example.intershipapplicationwithmaven.repository.entity.GuestEntity;
 import com.example.intershipapplicationwithmaven.repository.impl.BookingRepository;
@@ -19,9 +20,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.List;
 import java.util.Optional;
 import java.util.Scanner;
@@ -31,7 +30,6 @@ import java.util.logging.Logger;
 public class BookingService {
     private final GuestRepository guestRepository;
     private final BookingRepository bookingRepository;
-
     private final Mapper mapper = new Mapper();
     private final Scanner scanner;
     RabbitTemplate rabbitTemplate;
@@ -50,7 +48,7 @@ public class BookingService {
 
     }
 
-    public void createGuest() {
+    public void createGuest() throws EnteredNotValidDataException {
         String firstName = null;
         int age = 0;
         String address = null;
@@ -74,7 +72,7 @@ public class BookingService {
 
 
                 // Валидация возраста
-                if (!validateAge(age)) {
+                if (validateAge(age)) {
                     System.out.println(ServiceMessages.WRONG_AGE.getMessage());
                     age = 0; // повторить ввод
                 }
@@ -99,9 +97,6 @@ public class BookingService {
 
             if (validateCreateGuest(guest)) {
                 guestRepository.save(guest);
-                //monitoringSocketClient.sendEvent(EventType.CREATED, "Гость добавлен: " + guest.toString());
-            } else {
-                //monitoringSocketClient.sendEvent(EventType.MISTAKE, "Добавление гостя " + guest.toString() + " неудачно");
             }
         } catch (IOException e) {
             System.out.println(ServiceMessages.ERROR_CREATE_GUEST.getMessage());
@@ -110,7 +105,7 @@ public class BookingService {
         }
     }
 
-    private String getFirstName(String firstName) {
+    private String getFirstName(String firstName) throws EnteredNotValidDataException {
         // Ввод имени с повторной попыткой в случае ошибки
         while (firstName == null) {
             firstName = getValidInput(ServiceMessages.ENTER_NAME.getMessage(),
@@ -122,7 +117,7 @@ public class BookingService {
             }
 
             // Валидация имени
-            if (!validateName(firstName)) {
+            if (validateName(firstName)) {
                 System.out.println(ServiceMessages.WRONG_NAME.getMessage());
                 firstName = null; // повторить ввод
             }
@@ -142,12 +137,12 @@ public class BookingService {
                 }
 
                 // Валидация паспорта
-                if (!validatePassportNumber(passport)) {
+                if (validatePassportNumber(passport)) {
                     System.out.println(ServiceMessages.WRONG_PASSPORT.getMessage());
                     passport = null; // повторить ввод
                 }
-            } catch (IOException e) {
-                System.out.println(ServiceMessages.ERROR_CREATE_GUEST.getMessage() + e.getMessage());
+            } catch (EnteredNotValidDataException e) {
+                throw new RuntimeException(e);
             }
         }
         return passport;
@@ -183,7 +178,7 @@ public class BookingService {
             }
 
             // Валидация адреса
-            if (!validateAddress(address)) {
+            if (validateAddress(address)) {
                 System.out.println(ServiceMessages.WRONG_ADDRESS.getMessage());
                 address = null; // повторить ввод
             }
@@ -215,72 +210,9 @@ public class BookingService {
             return;
     }
 
-//    private int selectGuestToCheckIn() {
-//        List<GuestEntity> guestEntities = guestRepository.findAll();
-//        for (GuestEntity guest : guestEntities) {
-//            guest.getInfo();
-//        }
-//        System.out.println(ServiceMessages.SELECT_GUEST.getMessage());
-//        String input;
-//        int guestId = -1;
-//
-//        while (true) {
-//            input = scanner.nextLine().trim(); // Убираем пробелы
-//
-//            // Проверяем на пустую строку
-//            if (input.isEmpty()) {
-//                System.out.println("Ошибка: Ввод не может быть пустым. Повторите ввод.");
-//                continue;
-//            }
-//
-//            try {
-//                guestId = Integer.parseInt(input);
-//                break;
-//            } catch (NumberFormatException e) {
-//                System.out.println("Ошибка: Введите корректный числовой идентификатор гостя.");
-//            }
-//        }
-//
-//        return guestId;
-//    }
-//
-//    private void processRoomAvailability(BufferedReader in, int idGuest, int idHotel) throws IOException {
-//        String getAvailabilityResponse = in.readLine(); // Получение ответа
-//        if ("AVAILABLE".equals(getAvailabilityResponse)) {
-//            bookRoom(idGuest, idHotel);
-//        } else {
-//            if ("UNAVAILABLE".equals(getAvailabilityResponse)) {
-//                System.out.println("Такого отеля не существует");
-//                monitoringSocketClient.sendEvent(EventType.MISTAKE, "Гостиница " + idHotel +
-//                        " недоступна. Заявка отменена.");
-//            } else {
-//                System.out.println("В этом отеле нет мест");
-//                monitoringSocketClient.sendEvent(EventType.MISTAKE, "Гостиница " + idHotel +
-//                        " недоступна. Заявка отменена.");
-//            }
-//        }
-//    }
 
-    private int selectHotelToCheckIn(BufferedReader in, PrintWriter out) throws IOException {
-        String getAllHotelsResponse = in.readLine();
-        System.out.println(getAllHotelsResponse);
-        int idHotel = 0;
-        while (idHotel == 0) {
-            try {
-                String ageInput = getValidInput(ServiceMessages.ENTER_HOTEL.getMessage(),
-                        ServiceMessages.ERROR_MESSAGE_EMPTY_ID.getMessage());
 
-                idHotel = Integer.parseInt(ageInput);
 
-                out.println(idHotel);
-                return idHotel;
-            } catch (NumberFormatException e) {
-                System.out.println(ServiceMessages.ERROR_MESSAGE_ID_NOT_INT.getMessage());
-                idHotel = 0; // повторить ввод
-            }
-        }
-        return idHotel;
-    }
 
     public void bookRoom(GuestEntity guestId, int hotelId) {
         BookingEntity booking = new BookingEntity(guestId, hotelId);
@@ -302,86 +234,83 @@ public class BookingService {
         return true;
     }
 
-//    public void bookRoom(int guestId, int hotelId) {
-//        if (validateBookingDoubleCheckIn(guestId)) {
-//            BookingEntity booking = new BookingEntity(guestId, hotelId);
-//            bookingRepository.save(booking);
-//            System.out.println("Гость " + guestId + " успешно заселен в " + hotelId);
-//            monitoringSocketClient.sendEvent(EventType.CREATED, "Гость " + guestId +
-//                    " заселен в отель " + hotelId);
-//        }
-//    }
-//
-//
-//    public boolean validateBookingDoubleCheckIn(int guestId) {
-//        List<BookingEntity> bookings = bookingRepository.findAll();
-//        for (BookingEntity booking : bookings) {
-//            if (booking.getGuestId() == guestId) {
-//                System.out.println("Заселение отменено: гость уже заселен в отель " + booking.getHotelId());
-//                monitoringSocketClient.sendEvent(EventType.MISTAKE, "Заселение отменено: гость уже заселен в" +
-//                        " отель " + booking.getHotelId());
-//                return false;
-//            }
-//        }
-//        return true;
-//    }
-//
-//    public boolean validateCheckInGuest(int guestId) {
-//        boolean isExist = false;
-//        isExist = guestRepository.existsById(guestId);
-//
-//        if (!isExist) {
-//            System.out.println("Заселение отменено: гостя с таким ID не существует");
-//            monitoringSocketClient.sendEvent(EventType.MISTAKE, "Заселение отменено: гостя с таким ID не существует");
-//        }
-//        return isExist;
-//    }
 
-    public boolean validateCreateGuest(GuestEntity guestEntity) throws IOException {
-        if (!validateName(guestEntity.getName())) {
+
+    public boolean validateCreateGuest(GuestEntity guestEntity) throws IOException, EnteredNotValidDataException {
+        if (validateName(guestEntity.getName())) {
             System.out.println(ServiceMessages.WRONG_NAME.getMessage());
             return false;
         }
-        if (!validateAge(guestEntity.getAge())) {
+        if (validateAge(guestEntity.getAge())) {
             System.out.println(ServiceMessages.WRONG_AGE.getMessage());
             return false;
         }
 
-        if (!validateAddress(guestEntity.getAddress())) {
+        if (validateAddress(guestEntity.getAddress())) {
             System.out.println(ServiceMessages.WRONG_ADDRESS.getMessage());
             return false;
         }
 
-        if (!validatePassportNumber(guestEntity.getPassportNumber())) {
+        if (validatePassportNumber(guestEntity.getPassportNumber())) {
             System.out.println(ServiceMessages.WRONG_PASSPORT.getMessage());
             return false;
         }
         return true;
     }
 
-    public String validateCreateGuestHttp(GuestEntity guestEntity) throws IOException {
-        if (!validateName(guestEntity.getName())) {
+    public String validateCreateGuestHttp(GuestEntity guestEntity) throws EnteredNotValidDataException {
+        if (validateName(guestEntity.getName())) {
             return ServiceMessages.WRONG_NAME.getMessage();
         }
-        if (!validateAge(guestEntity.getAge())) {
+        if (validateAge(guestEntity.getAge())) {
             return ServiceMessages.WRONG_AGE.getMessage();
         }
-        if (!validateAddress(guestEntity.getAddress())) {
+        if (validateAddress(guestEntity.getAddress())) {
             return ServiceMessages.WRONG_ADDRESS.getMessage();
         }
-        if (!validatePassportNumber(guestEntity.getPassportNumber())) {
+        if (validatePassportNumber(guestEntity.getPassportNumber())) {
             return ServiceMessages.WRONG_PASSPORT.getMessage();
         }
-        return null;  // Валидация прошла успешно
+        return null;
+    }
+
+    public String validateUpdateGuestHttp(GuestEntity guestEntity) throws EnteredNotValidDataException {
+        if (validateName(guestEntity.getName())) {
+            return ServiceMessages.WRONG_NAME.getMessage();
+        }
+        if (validateAge(guestEntity.getAge())) {
+            return ServiceMessages.WRONG_AGE.getMessage();
+        }
+        if (validateAddress(guestEntity.getAddress())) {
+            return ServiceMessages.WRONG_ADDRESS.getMessage();
+        }
+
+        if (guestEntity.getPassportNumber() == null || guestEntity.getPassportNumber().length() != 6 ||
+                !guestEntity.getPassportNumber().matches("\\d{6}")) {
+            throw new EnteredNotValidDataException(ServiceMessages.WRONG_COUNT_NUMBER_PASSPORT.getMessage());
+        }
+
+        return null;
     }
 
 
-    private boolean validateName(String name) {
-        return name != null && name.length() <= 20 && Character.isUpperCase(name.charAt(0));
+    private boolean validateName(String name) throws EnteredNotValidDataException {
+        if(name == null || name.trim().isEmpty()){
+            throw new EnteredNotValidDataException("Имя гостя не может быть пустым");
+        }
+        if(name.length() > 20){
+            throw new EnteredNotValidDataException("Имя гостя не может быть длиннее 20 символов");
+        }
+
+        if(!Character.isUpperCase(name.charAt(0))){
+            throw new EnteredNotValidDataException("Имя гостя должно начинаться с большой буквы");
+        }
+
+        return name == null || name.length() > 20 || !Character.isUpperCase(name.charAt(0)) || name.trim().isEmpty();
     }
 
     private boolean validateAge(int age) {
-        return age >= 0 && age <= 120;
+        return age < 0 || age > 120;
     }
 
     private String getValidInput(String prompt, String errorMessage) {
@@ -397,27 +326,23 @@ public class BookingService {
     }
 
 
-    private boolean validatePassportNumber(String passportNumber) throws IOException {
+    private boolean validatePassportNumber(String passportNumber) throws EnteredNotValidDataException {
         if (passportNumber != null && passportNumber.length() == 6 && passportNumber.matches("\\d{6}")) {
             boolean passportExists = true;
             List<GuestEntity> guests = guestRepository.findAll();
             for (GuestEntity guest : guests) {
                 if (guest.getPassportNumber().equals(passportNumber)) {
-                    System.out.println(ServiceMessages.EXISTING_GUEST.getMessage());
-                    passportExists = false;
-                    break;
+                    throw new EnteredNotValidDataException(ServiceMessages.EXISTING_GUEST.getMessage());
                 }
             }
-            return passportExists;
+            return !passportExists;
         } else {
-            System.out.println(ServiceMessages.WRONG_COUNT_NUMBER_PASSPORT.getMessage());
-            return false;
+            throw new EnteredNotValidDataException(ServiceMessages.WRONG_COUNT_NUMBER_PASSPORT.getMessage());
         }
     }
 
     private boolean validatePassportNumber(String passportNumber, int id) {
         if (passportNumber != null && passportNumber.length() == 6 && passportNumber.matches("\\d{6}")) {
-            // Используем метод репозитория для проверки номера паспорта
             boolean passportExists = guestRepository.existsByPassportNumberAndIdNot(passportNumber, id);
             if (passportExists) {
                 System.out.println(ServiceMessages.WRONG_COUNT_NUMBER_PASSPORT.getMessage());
@@ -432,7 +357,7 @@ public class BookingService {
 
 
     private boolean validateAddress(String address) {
-        return address != null && address.length() <= 30 && Character.isUpperCase(address.charAt(0));
+        return address == null || address.length() > 30 || !Character.isUpperCase(address.charAt(0));
     }
 
     public void readGuest() {
@@ -444,7 +369,6 @@ public class BookingService {
         } else {
             System.out.println(ServiceMessages.WRONG_GUEST_ID.getMessage());
         }
-
 
     }
 
@@ -459,7 +383,7 @@ public class BookingService {
         }
     }
 
-    public void updateGuest() {
+    public void updateGuest() throws EnteredNotValidDataException {
         String idInput = getValidInput(ServiceMessages.ENTER_ID.getMessage(),
                 ServiceMessages.ERROR_MESSAGE_EMPTY_ID.getMessage());
         int id = Integer.parseInt(idInput);
@@ -490,7 +414,7 @@ public class BookingService {
 
 
                     // Валидация возраста
-                    if (!validateAge(age)) {
+                    if (validateAge(age)) {
                         System.out.println(ServiceMessages.WRONG_AGE.getMessage());
                         age = 0; // повторить ввод
                     }
@@ -529,17 +453,19 @@ public class BookingService {
     }
 
     public GuestEntity getGuestByID(int id) {
-        return guestRepository.findById(id).get();
+        if (guestRepository.existsById(id)) {
+            return guestRepository.findById(id).get();
+        } else {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, ServiceMessages.GUEST_WITH_ID.getMessage() + id +
+                    ServiceMessages.NOT_FOUND.getMessage());
+        }
     }
 
-    public void addGuest(GuestEntity guestEntity) throws IOException {
+    public void addGuest(GuestEntity guestEntity) throws IOException, EnteredNotValidDataException {
         String validationError = validateCreateGuestHttp(guestEntity);
         if (validationError != null) {
-            // Если валидация не прошла, бросаем исключение с конкретным сообщением ошибки
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, validationError);
         }
-
-        // Если валидация прошла успешно, сохраняем гостя
         guestRepository.save(guestEntity);
     }
 
@@ -571,8 +497,12 @@ public class BookingService {
     }
 
 
-    public void updateGuestHttp(int id, GuestEntity guest) {
+    public void updateGuestHttp(int id, GuestEntity guest) throws EnteredNotValidDataException {
         if (guestRepository.existsById(id)) {
+            String validationError = validateUpdateGuestHttp(guest);
+            if (validationError != null) {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, validationError);
+            }
             boolean passportExists = guestRepository.existsByPassportNumberAndIdNot(guest.getPassportNumber(), id);
             if (passportExists) {
                 throw new ResponseStatusException(HttpStatus.CONFLICT, ServiceMessages.GUEST_WITH_PASSPORT.getMessage() +
@@ -599,28 +529,8 @@ public class BookingService {
             return ResponseEntity.badRequest().body(ServiceMessages.EXIST_CHECKIIN.getMessage());
         }
 
-        return ResponseEntity.ok(ServiceMessages.ACCESS_CHECKIN.getMessage()); // Если все проверки пройдены
+        return ResponseEntity.ok(ServiceMessages.ACCESS_CHECKIN.getMessage());
     }
-
-
-    public void sendEvent(EventType eventType, String message) {
-        try {
-            // Формируем тело запроса
-            MonitoringEvent event = new MonitoringEvent(eventType, message);
-            // Отправляем POST-запрос на сервис мониторинга
-            ResponseEntity<String> response = restTemplate.postForEntity("http://localhost:8082/log" + "/logEvent", event, String.class);
-
-            if (response.getStatusCode().is2xxSuccessful()) {
-                System.out.println("Событие успешно отправлено");
-            } else {
-                System.out.println("Ошибка при отправке события: " + response.getStatusCode());
-            }
-        } catch (Exception e) {
-            System.out.println("Не удалось подключиться к сервису мониторинга: " + e.getMessage());
-        }
-    }
-
-
 
     public void sendBookingToMonitoring(EventType eventType, String message) {
         MonitoringEvent event = new MonitoringEvent(eventType, message);

@@ -1,6 +1,7 @@
 package com.example.intershipapplicationwithmaven.controller;
 
 import com.example.EventType;
+import com.example.intershipapplicationwithmaven.exception.EnteredNotValidDataException;
 import com.example.intershipapplicationwithmaven.repository.entity.GuestEntity;
 import com.example.intershipapplicationwithmaven.service.BookingService;
 import org.springframework.http.HttpStatus;
@@ -19,13 +20,17 @@ public class BookingController {
     BookingService bookingService;
     private final RestTemplate restTemplate = new RestTemplate();
 
+    private static final String HOTEL_SERVICE_URL = "http://localhost:8081/hotels";
+    private static final String CHECK_AVAILABILITY_URL = "/checkAvailability?hotelId=";
+    private static final String GET_ALL_HOTELS = "/getAllHotels";
+    private static final String INCREASE_AVAILABILITY = "/increaseAvailability?hotelId=";
+
     public BookingController(BookingService bookingService) {
         this.bookingService = bookingService;
     }
 
     @GetMapping("/getAllGuests")
     public ResponseEntity<List<GuestEntity>> getAllGuests(){
-        bookingService.sendBookingToMonitoring(EventType.SUCCESS, "Список гостей получен");
         return ResponseEntity.ok(bookingService.getAllGuests());
     }
 
@@ -38,15 +43,19 @@ public class BookingController {
     public ResponseEntity<String> addGuest(@RequestBody GuestEntity guestEntity) {
         try {
             bookingService.addGuest(guestEntity);
-            bookingService.sendBookingToMonitoring(EventType.CREATED, "Гость добавлен: " + guestEntity.toString());
-
-            return ResponseEntity.ok("Гость успешно добавлен: " + guestEntity.getName());
-        } catch (ResponseStatusException ex) {
-            bookingService.sendBookingToMonitoring(EventType.MISTAKE, "Ошибка добавления гостя: " + ex.getReason());
+            bookingService.sendBookingToMonitoring(EventType.CREATED, ControllerMessages.GUEST_ADDED.getMessage(guestEntity.toString()));
+            return ResponseEntity.ok(ControllerMessages.GUEST_ADDED.getMessage(guestEntity.getName()));
+        }
+        catch (EnteredNotValidDataException e) {
+            bookingService.sendBookingToMonitoring(EventType.MISTAKE, ControllerMessages.ADD_GUEST_ERROR.getMessage(e.getMessage()));
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
+        catch (ResponseStatusException ex) {
+            bookingService.sendBookingToMonitoring(EventType.MISTAKE,  ControllerMessages.ADD_GUEST_ERROR.getMessage(ex.getMessage()));
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getReason());
         } catch (IOException e) {
-            bookingService.sendBookingToMonitoring(EventType.MISTAKE, "Ошибка при добавлении гостя: " + e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Ошибка при добавлении гостя.");
+            bookingService.sendBookingToMonitoring(EventType.MISTAKE,  ControllerMessages.ADD_GUEST_ERROR.getMessage(e.getMessage()));
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ControllerMessages.ADD_GUEST_ERROR.getMessage(e.getMessage()));
         }
     }
 
@@ -56,14 +65,19 @@ public class BookingController {
     public ResponseEntity<String> updateGuest(@PathVariable int id, @RequestBody GuestEntity guestEntity) {
         try {
             bookingService.updateGuestHttp(id, guestEntity);
-            bookingService.sendBookingToMonitoring(EventType.SUCCESS, "Гость с ID " + id + " успешно обновлен.");
-            return ResponseEntity.ok("Гость с ID " + id + " успешно обновлен.");
-        } catch (ResponseStatusException ex) {
-            bookingService.sendBookingToMonitoring(EventType.MISTAKE, "Ошибка при обновлении гостя с ID " + id + ": " + ex.getReason());
+            bookingService.sendBookingToMonitoring(EventType.SUCCESS, ControllerMessages.GUEST_UPDATED.getMessage(id));
+            return ResponseEntity.ok(ControllerMessages.GUEST_UPDATED.getMessage(id));
+        }
+        catch (EnteredNotValidDataException e) {
+            bookingService.sendBookingToMonitoring(EventType.MISTAKE, ControllerMessages.UPDATE_GUEST_ERROR.getMessage(id, e.getMessage()));
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
+        catch (ResponseStatusException ex) {
+            bookingService.sendBookingToMonitoring(EventType.MISTAKE,  ControllerMessages.UPDATE_GUEST_ERROR.getMessage(id, ex.getReason()));
             return ResponseEntity.status(ex.getStatus()).body(ex.getReason());
         } catch (Exception e) {
-            bookingService.sendBookingToMonitoring(EventType.MISTAKE, "Ошибка при обновлении гостя с ID " + id + ": " + e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Ошибка при обновлении гостя.");
+            bookingService.sendBookingToMonitoring(EventType.MISTAKE, ControllerMessages.UPDATE_GUEST_ERROR.getMessage(id, e.getMessage()));
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ControllerMessages.UPDATE_GUEST_ERROR.getMessage(id, e.getMessage()));
         }
     }
 
@@ -71,79 +85,84 @@ public class BookingController {
     public ResponseEntity<String> deleteGuest(@PathVariable int id) {
         try {
             int hotelId = bookingService.getHotelId(id);
-
             if (hotelId != 0) {
-
-                String healthCheck = "http://localhost:8081/hotels/getAllHotels";
                 try {
-                    restTemplate.getForEntity(healthCheck, String.class);
+                    restTemplate.getForEntity(HOTEL_SERVICE_URL + GET_ALL_HOTELS, String.class);
                 } catch (Exception e) {
-                    bookingService.sendBookingToMonitoring(EventType.MISTAKE, "Ошибка удаления: сервис отелей недоступен.");
-                    return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).body("Сервис отелей недоступен.");
+                    bookingService.sendBookingToMonitoring(EventType.MISTAKE,
+                            ControllerMessages.DELETE_GUEST_ERROR.getMessage(ControllerMessages.HOTEL_SERVICE_UNAVAILABLE.getMessage()));
+                    return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).body(ControllerMessages.HOTEL_SERVICE_UNAVAILABLE.getMessage());
                 }
 
                 bookingService.deleteGuestHttp(id);
-                String availabilityUrl = "http://localhost:8081/hotels/increaseAvailability?hotelId=" + hotelId;
-                restTemplate.postForEntity(availabilityUrl, null, String.class);
-                bookingService.sendBookingToMonitoring(EventType.SUCCESS, "Гость с ID " + id + " успешно удален. Доступность отеля " + hotelId + " увеличена.");
+                restTemplate.postForEntity(HOTEL_SERVICE_URL + INCREASE_AVAILABILITY + hotelId, null, String.class);
+                bookingService.sendBookingToMonitoring(EventType.SUCCESS, ControllerMessages.GUEST_DELETED.getMessage(id, hotelId));
 
-                return ResponseEntity.ok("Гость с ID " + id + " успешно удален, доступность отеля " + hotelId + " увеличена.");
+                return ResponseEntity.ok(ControllerMessages.GUEST_DELETED.getMessage(id, hotelId));
             } else {
                 bookingService.deleteGuestHttp(id);
-                bookingService.sendBookingToMonitoring(EventType.SUCCESS, "Гость с ID " + id + " успешно удален. Гость не проживал в отеле.");
+                bookingService.sendBookingToMonitoring(EventType.SUCCESS, ControllerMessages.GUEST_DELETED_WITHOUT_HOTEL.getMessage(id));
 
-                return ResponseEntity.ok("Гость с ID " + id + " успешно удален, гость не проживал в отеле.");
+                return ResponseEntity.ok(ControllerMessages.GUEST_DELETED_WITHOUT_HOTEL.getMessage(id));
             }
         } catch (ResponseStatusException ex) {
-            bookingService.sendBookingToMonitoring(EventType.MISTAKE, "Ошибка при удалении гостя с ID " + id + ": " + ex.getReason());
-            return ResponseEntity.status(ex.getStatus()).body(ex.getReason());
+            bookingService.sendBookingToMonitoring(EventType.MISTAKE, ControllerMessages.DELETE_GUEST_ERROR.getMessage(id, ex.getReason()));
+            return ResponseEntity.status(ex.getStatus()).body(ControllerMessages.DELETE_GUEST_ERROR.getMessage(id, ex.getReason()));
         } catch (Exception e) {
-            bookingService.sendBookingToMonitoring(EventType.MISTAKE, "Ошибка при удалении гостя с ID " + id + ": " + e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Ошибка при удалении гостя. " + e.getMessage());
+            bookingService.sendBookingToMonitoring(EventType.MISTAKE, ControllerMessages.DELETE_GUEST_ERROR.getMessage(id, e.getMessage()));
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ControllerMessages.DELETE_GUEST_ERROR.getMessage(id, e.getMessage()));
         }
     }
 
 
+//    TODO: Проверка на null
     @PostMapping("/checkIn")
     public ResponseEntity<String> checkIn(@RequestBody Map<String, Integer> request) {
         Integer guestId = request.get("guestId");
         Integer hotelId = request.get("hotelId");
+        if (guestId == null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body
+                    (ControllerMessages.CHECK_IN_ERROR.getMessage(ControllerMessages.GUEST_ID_NOT_NULL.getMessage()));
+        }
+        if (hotelId == null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).
+                    body(ControllerMessages.CHECK_IN_ERROR.getMessage(ControllerMessages.HOTEL_ID_NOT_NULL.getMessage()));
+        }
 
         try {
             GuestEntity guestEntity = bookingService.getGuestByID(guestId);
-
             ResponseEntity<String> validationResponse = bookingService.validateCheckInHttp(guestId, hotelId);
             if (!validationResponse.getStatusCode().is2xxSuccessful()) {
-                bookingService.sendBookingToMonitoring(EventType.MISTAKE, "Ошибка заселения: " + validationResponse.getBody());
-                return validationResponse; // Возвращаем ответ валидации как результат
+                bookingService.sendBookingToMonitoring(EventType.MISTAKE, ControllerMessages.CHECK_IN_ERROR.getMessage(validationResponse.getBody()));
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ControllerMessages.CHECK_IN_ERROR.getMessage(validationResponse.getBody()));
             }
 
-            String availabilityUrl = "http://localhost:8081/hotels/checkAvailability?hotelId=" + hotelId;
-            String healthCheck = "http://localhost:8081/hotels/getAllHotels";
             try {
-                restTemplate.getForEntity(healthCheck, String.class);
+                restTemplate.getForEntity(HOTEL_SERVICE_URL + GET_ALL_HOTELS, String.class);
             } catch (Exception e) {
-                bookingService.sendBookingToMonitoring(EventType.MISTAKE, "Ошибка заселения: сервис отелей недоступен.");
-                return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).body("Сервис отелей недоступен.");
+                bookingService.sendBookingToMonitoring(EventType.MISTAKE,
+                        ControllerMessages.CHECK_IN_ERROR.getMessage(ControllerMessages.HOTEL_SERVICE_UNAVAILABLE.getMessage()));
+                return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).body(ControllerMessages.HOTEL_SERVICE_UNAVAILABLE.getMessage());
             }
 
-            ResponseEntity<String> availabilityResponse = restTemplate.postForEntity(availabilityUrl, null, String.class);
+            ResponseEntity<String> availabilityResponse = restTemplate.postForEntity(HOTEL_SERVICE_URL +
+                    CHECK_AVAILABILITY_URL + hotelId, null, String.class);
 
             if ("AVAILABLE".equals(availabilityResponse.getBody())) {
                 bookingService.bookRoom(guestEntity, hotelId);
-                bookingService.sendBookingToMonitoring(EventType.SUCCESS, "Гость с ID " + guestId + " успешно заселен в отель " + hotelId);
-                return ResponseEntity.ok("Гость " + guestId + " успешно заселен в отель " + hotelId);
+                bookingService.sendBookingToMonitoring(EventType.SUCCESS, ControllerMessages.CHECK_IN_SUCCESS.getMessage(guestId, hotelId));
+                return ResponseEntity.ok(ControllerMessages.CHECK_IN_SUCCESS.getMessage(guestId, hotelId));
             } else if ("UNAVAILABLE".equals(availabilityResponse.getBody())) {
-                bookingService.sendBookingToMonitoring(EventType.MISTAKE, "Ошибка заселения: отель " + hotelId + " недоступен.");
-                return ResponseEntity.badRequest().body("Отель недоступен.");
+                bookingService.sendBookingToMonitoring(EventType.MISTAKE, ControllerMessages.CHECK_IN_AVAILABILITY_ERROR.getMessage(hotelId));
+                return ResponseEntity.badRequest().body(ControllerMessages.CHECK_IN_AVAILABILITY_ERROR.getMessage(hotelId));
             } else {
-                bookingService.sendBookingToMonitoring(EventType.MISTAKE, "Ошибка заселения: в отеле " + hotelId + " нет свободных мест.");
-                return ResponseEntity.badRequest().body("В отеле нет свободных мест.");
+                bookingService.sendBookingToMonitoring(EventType.MISTAKE, ControllerMessages.CHECK_IN_NO_VACANCY.getMessage(hotelId));
+                return ResponseEntity.badRequest().body(ControllerMessages.CHECK_IN_NO_VACANCY.getMessage(hotelId));
             }
 
         } catch (Exception e) {
-            bookingService.sendBookingToMonitoring(EventType.MISTAKE, "Ошибка при заселении гостя с ID " + guestId + ": " + e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Ошибка при заселении гостя.");
+            bookingService.sendBookingToMonitoring(EventType.MISTAKE, ControllerMessages.CHECK_IN_ERROR_WITH_ID.getMessage(guestId, e.getMessage()));
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ControllerMessages.CHECK_IN_ERROR_WITH_ID.getMessage(guestId, e.getMessage()));
         }
     }
 

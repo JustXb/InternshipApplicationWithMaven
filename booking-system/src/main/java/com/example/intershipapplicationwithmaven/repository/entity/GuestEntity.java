@@ -7,7 +7,7 @@ import java.util.List;
 
 @javax.persistence.Entity
 @Table(name = "guests")
-public class GuestEntity extends Entity {
+public class GuestEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

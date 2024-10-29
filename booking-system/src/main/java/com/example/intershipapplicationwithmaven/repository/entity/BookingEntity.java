@@ -14,8 +14,8 @@ public class BookingEntity {
     private int id;
 
     @OneToOne
-    @JoinColumn(name = "guest_id", nullable = false)  // Связываем с таблицей гостей по столбцу guest_id
-    @JsonBackReference // Указываем, что это обратная ссылка
+    @JoinColumn(name = "guest_id", nullable = false)
+    @JsonBackReference
     private GuestEntity guest;
 
     @Column(nullable = false)

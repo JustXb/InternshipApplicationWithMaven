@@ -1,0 +1,132 @@
+Tue_Oct_29_09-48-00_MSK_2024 SUCCESS Гость 32 успешно заселен в отель 1.
+Tue_Oct_29_09-49-51_MSK_2024 MISTAKE Ошибка
+Tue_Oct_29_09-50-07_MSK_2024 MISTAKE Ошибка
+Tue_Oct_29_09-50-11_MSK_2024 CREATED Гость успешно добавлен: GuestEntity{id=33, name='Leo', age=22, passportNumber='221151', address='Moscow'}
+Tue_Oct_29_09-50-34_MSK_2024 MISTAKE Ошибка
+Tue_Oct_29_09-50-40_MSK_2024 MISTAKE Ошибка
+Tue_Oct_29_09-50-45_MSK_2024 CREATED Гость успешно добавлен: GuestEntity{id=34, name='Leo', age=1, passportNumber='123456', address='Moscow'}
+Tue_Oct_29_09-51-02_MSK_2024 MISTAKE Ошибка
+Tue_Oct_29_09-51-11_MSK_2024 MISTAKE Ошибка
+Tue_Oct_29_09-51-21_MSK_2024 MISTAKE Ошибка
+Tue_Oct_29_09-51-34_MSK_2024 MISTAKE Ошибка
+Tue_Oct_29_09-52-04_MSK_2024 MISTAKE Ошибка
+Tue_Oct_29_09-52-08_MSK_2024 MISTAKE Ошибка
+Tue_Oct_29_09-52-17_MSK_2024 CREATED Гость успешно добавлен: GuestEntity{id=35, name='Leo', age=0, passportNumber='995588', address='Moscow'}
+Tue_Oct_29_09-52-38_MSK_2024 MISTAKE Ошибка заселения
+Tue_Oct_29_09-52-43_MSK_2024 MISTAKE Ошибка заселения
+Tue_Oct_29_09-52-48_MSK_2024 MISTAKE Ошибка заселения: отель 3 недоступен.
+Tue_Oct_29_09-52-48_MSK_2024 MISTAKE Ошибка
+Tue_Oct_29_09-52-52_MSK_2024 MISTAKE Ошибка заселения: отель 6 недоступен.
+Tue_Oct_29_09-52-52_MSK_2024 MISTAKE Ошибка
+Tue_Oct_29_09-54-03_MSK_2024 SUCCESS Гость успешно добавлен: 
+Tue_Oct_29_09-54-42_MSK_2024 MISTAKE Ошибка заселения: отель 6 недоступен.
+Tue_Oct_29_09-57-39_MSK_2024 MISTAKE Ошибка заселения: отель 6 недоступен.
+Tue_Oct_29_09-59-09_MSK_2024 MISTAKE Ошибка заселения: отель 6 недоступен.
+Tue_Oct_29_10-00-48_MSK_2024 MISTAKE Ошибка заселения: отель 6 недоступен.
+Tue_Oct_29_10-00-48_MSK_2024 MISTAKE Ошибка: Ошибка при заселении гостя с ID 33: Format specifier '%d': Format specifier '%d'
+Tue_Oct_29_10-02-16_MSK_2024 MISTAKE Ошибка заселения: отель 6 недоступен.
+Tue_Oct_29_10-02-16_MSK_2024 MISTAKE Ошибка: Ошибка при заселении гостя с ID 33: Format specifier '%d': Format specifier '%d'
+Tue_Oct_29_10-03-50_MSK_2024 MISTAKE Ошибка: Ошибка добавления гостя: dddddddd: 400 BAD_REQUEST "Номер паспорта не валиден"
+Tue_Oct_29_10-04-07_MSK_2024 CREATED Гость успешно добавлен: GuestEntity{id=36, name='Leo', age=16, passportNumber='225544', address='Moscow'}
+Tue_Oct_29_10-06-10_MSK_2024 MISTAKE Ошибка: Ошибка добавления гостя: dddddddd: 400 BAD_REQUEST "Неверное имя пользователя"
+Tue_Oct_29_10-07-58_MSK_2024 MISTAKE Ошибка: Ошибка добавления гостя: dddddddd: 400 BAD_REQUEST "Номер паспорта не валиден"
+Tue_Oct_29_10-08-15_MSK_2024 MISTAKE Ошибка: Ошибка добавления гостя: dddddddd: 400 BAD_REQUEST "Неверно указан адрес"
+Tue_Oct_29_10-09-51_MSK_2024 MISTAKE Ошибка заселения: отель 6 недоступен.
+Tue_Oct_29_10-09-51_MSK_2024 MISTAKE Ошибка: Ошибка при заселении гостя с ID 33: Format specifier '%d': Format specifier '%d'
+Tue_Oct_29_10-15-04_MSK_2024 MISTAKE Ошибка при удалении гостя с ID 31: Гость с ID 31 не найден.
+Tue_Oct_29_10-15-09_MSK_2024 SUCCESS Гость с ID 33 успешно удален. Гость не проживал в отеле.
+Tue_Oct_29_10-15-12_MSK_2024 SUCCESS Гость с ID 32 успешно удален. Доступность отеля 1 увеличена.
+Tue_Oct_29_10-15-18_MSK_2024 MISTAKE Ошибка добавления гостя: Номер паспорта не валиден
+Tue_Oct_29_10-15-23_MSK_2024 MISTAKE Ошибка добавления гостя: Неверное имя пользователя
+Tue_Oct_29_10-15-28_MSK_2024 MISTAKE Ошибка добавления гостя: Номер паспорта не валиден
+Tue_Oct_29_10-15-38_MSK_2024 CREATED Гость добавлен: GuestEntity{id=37, name='Leo', age=0, passportNumber='114477', address='Moscow'}
+Tue_Oct_29_10-15-46_MSK_2024 MISTAKE Ошибка при заселении гостя с ID 33: No value present
+Tue_Oct_29_10-15-51_MSK_2024 MISTAKE Ошибка при заселении гостя с ID 33: No value present
+Tue_Oct_29_10-16-01_MSK_2024 MISTAKE Ошибка заселения: в отеле 3 нет свободных мест.
+Tue_Oct_29_10-16-04_MSK_2024 MISTAKE Ошибка заселения: отель 6 недоступен.
+Tue_Oct_29_10-16-09_MSK_2024 SUCCESS Гость с ID 35 успешно заселен в отель 1
+Tue_Oct_29_10-16-16_MSK_2024 SUCCESS Гость с ID 35 успешно удален. Доступность отеля 1 увеличена.
+Tue_Oct_29_10-32-18_MSK_2024 MISTAKE Ошибка добавления гостя: Имя гостя не может быть пустым
+Tue_Oct_29_10-33-12_MSK_2024 MISTAKE Ошибка добавления гостя: Имя гостя должно начинаться с большой буквы
+Tue_Oct_29_10-33-19_MSK_2024 MISTAKE Ошибка добавления гостя: Имя гостя не может быть длиннее 20 символов
+Tue_Oct_29_10-37-58_MSK_2024 MISTAKE Ошибка добавления гостя: Номер паспорта должен содержать ровно 6 цифр.
+Tue_Oct_29_10-38-02_MSK_2024 MISTAKE Ошибка добавления гостя: Номер паспорта должен содержать ровно 6 цифр.
+Tue_Oct_29_10-38-09_MSK_2024 MISTAKE Ошибка добавления гостя: Номер паспорта не валиден
+Tue_Oct_29_10-39-01_MSK_2024 MISTAKE Ошибка добавления гостя: Гость с такими паспортными данными уже существует
+Tue_Oct_29_10-39-11_MSK_2024 CREATED Гость добавлен: GuestEntity{id=38, name='Leo', age=16, passportNumber='225588', address='Moscow'}
+Tue_Oct_29_10-39-16_MSK_2024 MISTAKE Ошибка добавления гостя: Гость с такими паспортными данными уже существует
+Tue_Oct_29_10-39-43_MSK_2024 SUCCESS Гость с ID 38 успешно обновлен.
+Tue_Oct_29_10-39-47_MSK_2024 SUCCESS Гость с ID 38 успешно обновлен.
+Tue_Oct_29_10-39-53_MSK_2024 MISTAKE Ошибка при обновлении гостя с ID 38: Гость с паспортными данными 123456 уже существует.
+Tue_Oct_29_10-40-00_MSK_2024 SUCCESS Гость с ID 38 успешно обновлен.
+Tue_Oct_29_10-40-24_MSK_2024 MISTAKE Ошибка при заселении гостя с ID 44: No value present
+Tue_Oct_29_10-46-24_MSK_2024 CREATED Гость добавлен: GuestEntity{id=39, name='Leo', age=22, passportNumber='666666', address='Moscow'}
+Tue_Oct_29_10-46-24_MSK_2024 CREATED Гость GuestEntity{id=39, name='Leo', age=22, passportNumber='666666', address='Moscow'} успешно добавлен 
+Tue_Oct_29_10-46-58_MSK_2024 MISTAKE Ошибка добавления гостя: Гость с такими паспортными данными уже существует
+Tue_Oct_29_10-47-03_MSK_2024 CREATED Гость GuestEntity{id=40, name='Feeod', age=22, passportNumber='555555', address='Moscow'} успешно добавлен 
+Tue_Oct_29_10-48-02_MSK_2024 CREATED Гость GuestEntity{id=41, name='Feeod', age=22, passportNumber='115588', address='Moscow'} успешно добавлен 
+Tue_Oct_29_10-50-07_MSK_2024 MISTAKE Ошибка добавления гостя: Гость с такими паспортными данными уже существует
+Tue_Oct_29_10-50-14_MSK_2024 MISTAKE Ошибка добавления гостя: Имя гостя не может быть пустым
+Tue_Oct_29_10-50-28_MSK_2024 MISTAKE Ошибка добавления гостя: Имя гостя не может быть пустым
+Tue_Oct_29_10-53-53_MSK_2024 SUCCESS Ошибка добавления гостя: 38
+Tue_Oct_29_10-54-38_MSK_2024 SUCCESS Гость с ID 38 успешно обновлен.
+Tue_Oct_29_10-54-42_MSK_2024 SUCCESS Гость с ID 38 успешно обновлен.
+Tue_Oct_29_10-55-02_MSK_2024 SUCCESS Гость с ID 38 успешно обновлен.
+Tue_Oct_29_10-55-16_MSK_2024 MISTAKE Ошибка при обновлении гостя с ID 38: not-null property references a null or transient value : com.example.intershipapplicationwithmaven.repository.entity.GuestEntity.name; nested exception is org.hibernate.PropertyValueException: not-null property references a null or transient value : com.example.intershipapplicationwithmaven.repository.entity.GuestEntity.name
+Tue_Oct_29_10-58-18_MSK_2024 MISTAKE Ошибка при обновлении гостя с ID 38: Номер паспорта должен содержать ровно 6 цифр.
+Tue_Oct_29_10-58-28_MSK_2024 MISTAKE Ошибка при обновлении гостя с ID 38: Гость с такими паспортными данными уже существует
+Tue_Oct_29_10-58-35_MSK_2024 MISTAKE Ошибка при обновлении гостя с ID 38: Гость с такими паспортными данными уже существует
+Tue_Oct_29_11-17-17_MSK_2024 SUCCESS Гость с ID 38 успешно обновлен.
+Tue_Oct_29_11-17-24_MSK_2024 MISTAKE Ошибка при обновлении гостя с ID 38: Гость с паспортными данными 123456 уже существует.
+Tue_Oct_29_11-17-39_MSK_2024 SUCCESS Гость с ID 38 успешно обновлен.
+Tue_Oct_29_11-17-45_MSK_2024 MISTAKE Ошибка при обновлении гостя с ID 38: Номер паспорта должен содержать ровно 6 цифр.
+Tue_Oct_29_11-17-51_MSK_2024 MISTAKE Ошибка при обновлении гостя с ID 38: Имя гостя не может быть пустым
+Tue_Oct_29_11-18-07_MSK_2024 SUCCESS Гость с ID 38 успешно обновлен.
+Tue_Oct_29_11-19-57_MSK_2024 MISTAKE Ошибка добавления гостя: 400 BAD_REQUEST "Неверно указан адрес"
+Tue_Oct_29_11-22-08_MSK_2024 MISTAKE Ошибка при обновлении гостя с ID 38: Имя гостя должно начинаться с большой буквы
+Tue_Oct_29_11-22-14_MSK_2024 SUCCESS Гость с ID 38 успешно обновлен.
+Tue_Oct_29_11-22-21_MSK_2024 SUCCESS Гость с ID 38 успешно обновлен.
+Tue_Oct_29_11-22-27_MSK_2024 SUCCESS Гость с ID 38 успешно обновлен.
+Tue_Oct_29_11-23-27_MSK_2024 SUCCESS Гость с ID 38 успешно обновлен.
+Tue_Oct_29_11-25-45_MSK_2024 MISTAKE Ошибка при обновлении гостя с ID 38: Неверно указан адрес
+Tue_Oct_29_11-25-50_MSK_2024 SUCCESS Гость с ID 38 успешно обновлен.
+Tue_Oct_29_11-31-22_MSK_2024 MISTAKE Ошибка при удалении гостя с ID 35: Гость с ID 35 не найден.
+Tue_Oct_29_11-38-22_MSK_2024 MISTAKE Ошибка при удалении гостя с ID 35: Гость с ID 35 не найден.
+Tue_Oct_29_11-38-35_MSK_2024 SUCCESS Гость с ID 37 успешно удален. Гость не проживал в отеле.
+Tue_Oct_29_11-38-56_MSK_2024 SUCCESS Гость с ID 41 успешно заселен в отель 1
+Tue_Oct_29_11-39-03_MSK_2024 SUCCESS Гость с ID 41 успешно удален, доступность отеля 1 увеличена.
+Tue_Oct_29_11-39-26_MSK_2024 MISTAKE Ошибка при заселении гостя с ID 42: No value present
+Tue_Oct_29_11-39-45_MSK_2024 SUCCESS Гость с ID 39 успешно заселен в отель 1
+Tue_Oct_29_11-39-57_MSK_2024 SUCCESS Гость с ID 39 успешно удален, доступность отеля 1 увеличена.
+Tue_Oct_29_11-48-41_MSK_2024 MISTAKE Ошибка при заселении гостя с ID 39: 404 NOT_FOUND "Гость с ID 39 не найден."
+Tue_Oct_29_11-51-08_MSK_2024 SUCCESS Гость c ID 34 успешно заселен в отель 1.
+Tue_Oct_29_11-51-12_MSK_2024 MISTAKE Ошибка заселения: Гость уже заселен в другой отель.
+Tue_Oct_29_11-51-16_MSK_2024 MISTAKE Ошибка заселения: Гость уже заселен в другой отель.
+Tue_Oct_29_11-51-26_MSK_2024 MISTAKE Ошибка заселения: в отеле 3 нет свободных мест.
+Tue_Oct_29_11-51-29_MSK_2024 MISTAKE Ошибка заселения: отель 5 недоступен.
+Tue_Oct_29_11-51-59_MSK_2024 MISTAKE Ошибка при заселении гостя с ID 38: null
+Tue_Oct_29_11-53-13_MSK_2024 MISTAKE Ошибка заселения: отель 5 недоступен.
+Tue_Oct_29_11-53-19_MSK_2024 MISTAKE Ошибка при заселении гостя с ID 52: 404 NOT_FOUND "Гость с ID 52 не найден."
+Tue_Oct_29_11-55-46_MSK_2024 MISTAKE Ошибка при заселении гостя с ID 52: 404 NOT_FOUND "Гость с ID 52 не найден."
+Tue_Oct_29_11-56-07_MSK_2024 MISTAKE Ошибка при заселении гостя с ID 52: 404 NOT_FOUND "Гость с ID 52 не найден."
+Tue_Oct_29_12-05-10_MSK_2024 MISTAKE Ошибка при заселении гостя с ID 52: 404 NOT_FOUND "Гость с ID 52 не найден."
+Tue_Oct_29_12-05-16_MSK_2024 MISTAKE Ошибка при заселении гостя с ID null: null
+Tue_Oct_29_12-08-55_MSK_2024 MISTAKE Ошибка при заселении гостя с ID 52: 404 NOT_FOUND "Гость с ID 52 не найден."
+Tue_Oct_29_12-09-00_MSK_2024 MISTAKE Ошибка при заселении гостя с ID 52: 404 NOT_FOUND "Гость с ID 52 не найден."
+Tue_Oct_29_12-09-05_MSK_2024 MISTAKE Ошибка при заселении гостя с ID 40: null
+Tue_Oct_29_12-12-19_MSK_2024 MISTAKE Ошибка при заселении гостя с ID 52: 404 NOT_FOUND "Гость с ID 52 не найден."
+Tue_Oct_29_12-12-24_MSK_2024 MISTAKE Ошибка при заселении гостя с ID null: null
+Tue_Oct_29_12-12-43_MSK_2024 MISTAKE Ошибка при заселении гостя с ID null: null
+Tue_Oct_29_12-13-09_MSK_2024 MISTAKE Ошибка при заселении гостя с ID null: null
+Tue_Oct_29_12-15-01_MSK_2024 MISTAKE Ошибка добавления гостя: Имя гостя не может быть пустым
+Tue_Oct_29_12-16-18_MSK_2024 MISTAKE Ошибка добавления гостя: Имя гостя не может быть пустым
+Tue_Oct_29_12-16-40_MSK_2024 MISTAKE Ошибка при заселении гостя с ID null: null
+Tue_Oct_29_12-18-31_MSK_2024 MISTAKE Ошибка при заселении гостя с ID 52: 404 NOT_FOUND "Гость с ID 52 не найден."
+Tue_Oct_29_12-18-48_MSK_2024 MISTAKE Ошибка при заселении гостя с ID 40: null
+Tue_Oct_29_12-22-28_MSK_2024 MISTAKE Ошибка заселения: отель 5 недоступен.
+Tue_Oct_29_12-25-29_MSK_2024 MISTAKE Ошибка заселения: Сервис отелей недоступен.
+Tue_Oct_29_12-41-16_MSK_2024 MISTAKE Ошибка при заселении гостя с ID 40: 404 NOT_FOUND "Гость с ID 40 не найден."
+Tue_Oct_29_12-41-50_MSK_2024 CREATED Гость GuestEntity{id=1, name='Feeod', age=22, passportNumber='115588', address='Moscow'} успешно добавлен 
+Tue_Oct_29_12-42-21_MSK_2024 MISTAKE Ошибка при заселении гостя с ID 40: 404 NOT_FOUND "Гость с ID 40 не найден."
+Tue_Oct_29_12-42-30_MSK_2024 SUCCESS Гость c ID 1 успешно заселен в отель 1.
+Tue_Oct_29_12-43-26_MSK_2024 MISTAKE Ошибка заселения: Гость уже заселен в другой отель.

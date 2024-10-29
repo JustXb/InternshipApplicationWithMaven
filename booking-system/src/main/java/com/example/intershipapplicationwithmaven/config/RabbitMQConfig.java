@@ -1,6 +1,8 @@
 package com.example.intershipapplicationwithmaven.config;
 
 import org.springframework.amqp.core.*;
+import org.springframework.amqp.rabbit.connection.CachingConnectionFactory;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -18,14 +20,26 @@ public class RabbitMQConfig {
         return new Queue(MONITORING_QUEUE_NAME, true);
     }
 
-    // Создание обмена (Exchange)
+    @Bean
+    public CachingConnectionFactory connectionFactory() {
+        CachingConnectionFactory connectionFactory = new CachingConnectionFactory("localhost");
+        connectionFactory.setUsername("guest");
+        connectionFactory.setPassword("guest");
+        connectionFactory.setPort(5672);
+        return connectionFactory;
+    }
+
+    @Bean
+    public RabbitTemplate rabbitTemplate(CachingConnectionFactory connectionFactory) {
+        return new RabbitTemplate(connectionFactory);
+    }
+
     @Bean
     public TopicExchange bookingExchange() {
         return new TopicExchange(BOOKING_EXCHANGE_NAME);
     }
 
 
-    // Привязка очереди для сервиса мониторинга к обмену
     @Bean
     public Binding monitoringBinding(Queue monitoringQueue, TopicExchange bookingExchange) {
         return BindingBuilder.bind(monitoringQueue).to(bookingExchange).with(MONITORING_ROUTING_KEY);

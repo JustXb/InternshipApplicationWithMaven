@@ -2,10 +2,9 @@ package com.example.intershipapplicationwithmaven.console;
 
 import com.example.intershipapplicationwithmaven.service.BookingService;
 
-import org.slf4j.Logger;
 import org.springframework.stereotype.Component;
 
-import java.sql.SQLOutput;
+
 import java.util.Locale;
 import java.util.Scanner;
 
