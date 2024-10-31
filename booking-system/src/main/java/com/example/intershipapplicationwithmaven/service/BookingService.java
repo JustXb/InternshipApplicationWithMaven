@@ -101,7 +101,7 @@ public class BookingService {
         } catch (IOException e) {
             System.out.println(ServiceMessages.ERROR_CREATE_GUEST.getMessage());
         } catch (Exception e) {
-            LOGGER.severe(ServiceMessages.UNKNOWN_ERROR.getMessage() + e.getMessage());
+            LOGGER.severe(ServiceMessages.UNKNOWN_ERROR.getMessage(e.getMessage()));
         }
     }
 
@@ -217,7 +217,7 @@ public class BookingService {
     public void bookRoom(GuestEntity guestId, int hotelId) {
         BookingEntity booking = new BookingEntity(guestId, hotelId);
         bookingRepository.save(booking);
-        System.out.println("Гость " + guestId + " успешно заселен в отель " + hotelId);
+        System.out.println(ServiceMessages.CHECK_IN_SUCCESS.getMessage(guestId, hotelId));
     }
 
     public boolean validateCheckInGuest(int guestId) {
@@ -296,14 +296,14 @@ public class BookingService {
 
     private boolean validateName(String name) throws EnteredNotValidDataException {
         if(name == null || name.trim().isEmpty()){
-            throw new EnteredNotValidDataException("Имя гостя не может быть пустым");
+            throw new EnteredNotValidDataException(ServiceMessages.ERROR_MESSAGE_EMPTY_NAME.getMessage());
         }
         if(name.length() > 20){
-            throw new EnteredNotValidDataException("Имя гостя не может быть длиннее 20 символов");
+            throw new EnteredNotValidDataException(ServiceMessages.ERROR_MESSAGE_WRONG_LENGTH_NAME.getMessage());
         }
 
         if(!Character.isUpperCase(name.charAt(0))){
-            throw new EnteredNotValidDataException("Имя гостя должно начинаться с большой буквы");
+            throw new EnteredNotValidDataException(ServiceMessages.ERROR_MESSAGE_WRONG_SIZE_FIRST_LETTER_NAME.getMessage());
         }
 
         return name == null || name.length() > 20 || !Character.isUpperCase(name.charAt(0)) || name.trim().isEmpty();
@@ -363,14 +363,14 @@ public class BookingService {
 
     private boolean validateAddress(String address) throws EnteredNotValidDataException {
         if(address == null || address.trim().isEmpty()){
-            throw new EnteredNotValidDataException("Адрес не может быть пустым");
+            throw new EnteredNotValidDataException(ServiceMessages.ERROR_MESSAGE_EMPTY_ADDRESS.getMessage());
         }
         if(address.length() > 20){
-            throw new EnteredNotValidDataException("Адрес не может быть длиннее 30 символов");
+            throw new EnteredNotValidDataException(ServiceMessages.ERROR_MESSAGE_WRONG_LENGTH_ADDRESS.getMessage());
         }
 
         if(!Character.isUpperCase(address.charAt(0))){
-            throw new EnteredNotValidDataException("Адрес должен начинаться с большой буквы");
+            throw new EnteredNotValidDataException(ServiceMessages.ERROR_MESSAGE_WRONG_SIZE_FIRST_LETTER_ADDRESS.getMessage());
         }
 
         return address == null || address.length() > 30 || !Character.isUpperCase(address.charAt(0));
@@ -472,8 +472,7 @@ public class BookingService {
         if (guestRepository.existsById(id)) {
             return guestRepository.findById(id).get();
         } else {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, ServiceMessages.GUEST_WITH_ID.getMessage() + id +
-                    ServiceMessages.NOT_FOUND.getMessage());
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, ServiceMessages.GUEST_NOT_FOUND.getMessage(id));
         }
     }
 
@@ -489,8 +488,7 @@ public class BookingService {
         if (guestRepository.existsById(id)) {
             guestRepository.deleteById(id);
         } else {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, ServiceMessages.GUEST_WITH_ID.getMessage() + id +
-                    ServiceMessages.NOT_FOUND.getMessage());
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, ServiceMessages.GUEST_NOT_FOUND.getMessage(id));
         }
     }
 
@@ -507,8 +505,7 @@ public class BookingService {
                 return 0;
             }
         } else {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, ServiceMessages.GUEST_WITH_ID.getMessage()
-                    + guestId + ServiceMessages.NOT_FOUND.getMessage());
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, ServiceMessages.GUEST_NOT_FOUND.getMessage(guestId));
         }
     }
 
@@ -521,15 +518,13 @@ public class BookingService {
             }
             boolean passportExists = guestRepository.existsByPassportNumberAndIdNot(guest.getPassportNumber(), id);
             if (passportExists) {
-                throw new ResponseStatusException(HttpStatus.CONFLICT, ServiceMessages.GUEST_WITH_PASSPORT.getMessage() +
-                        guest.getPassportNumber() + ServiceMessages.EXIST.getMessage());
+                throw new ResponseStatusException(HttpStatus.CONFLICT, ServiceMessages.GUEST_WITH_PASSPORT_EXIST.getMessage(guest.getPassportNumber()));
             } else {
                 guest.setId(id);
                 guestRepository.save(guest);
             }
         } else {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, ServiceMessages.GUESTs_WITH_ID.getMessage() + id +
-                    ServiceMessages.NOT_FOUND.getMessage());
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, ServiceMessages.GUEST_NOT_FOUND.getMessage(id));
         }
     }
 
