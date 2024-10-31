@@ -21,8 +21,8 @@ public class GuestEntity {
     @Column(nullable = false)
     private String address;
 
-    @OneToOne(mappedBy = "guest", cascade = CascadeType.ALL, orphanRemoval = true) // Связь с таблицей бронирований
-    @JsonManagedReference // Указываем, что это управляемая ссылка
+    @OneToOne(mappedBy = "guest", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
     private BookingEntity booking;
 
     public GuestEntity(int id, String name, int age, String passportNumber, String address) {

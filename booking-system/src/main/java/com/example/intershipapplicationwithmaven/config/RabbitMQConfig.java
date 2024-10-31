@@ -14,7 +14,6 @@ public class RabbitMQConfig {
     public static final String MONITORING_ROUTING_KEY = "monitoringRoutingKey";
 
 
-    // Создание очереди для сервиса мониторинга
     @Bean
     public Queue monitoringQueue() {
         return new Queue(MONITORING_QUEUE_NAME, true);

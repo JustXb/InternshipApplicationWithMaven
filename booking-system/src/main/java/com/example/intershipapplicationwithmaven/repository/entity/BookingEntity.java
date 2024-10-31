@@ -21,7 +21,6 @@ public class BookingEntity {
     @Column(nullable = false)
     private int hotelId;
 
-    // Constructors, Getters, and Setters
 
     public BookingEntity(int id, GuestEntity guest, int hotelId) {
         this.id = id;
@@ -64,7 +63,7 @@ public class BookingEntity {
     public String toString() {
         return "BookingEntity{" +
                 "id=" + id +
-                ", guestId=" + guest.getId() +  // Отображаем ID гостя
+                ", guestId=" + guest.getId() +
                 ", hotelId=" + hotelId +
                 '}';
     }

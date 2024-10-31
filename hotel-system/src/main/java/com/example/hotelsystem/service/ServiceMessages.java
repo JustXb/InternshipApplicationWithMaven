@@ -5,9 +5,10 @@ public enum ServiceMessages {
     REQUEST_HOTEL_AVAILABILITY("Запрос на доступность гостиницы: "),
     AVAILABLE("AVAILABLE"),
     UNAVAILABLE("UNAVAILABLE"),
-    UNAVAILABLE_NOAVAILABILITY("UNAVAILABLE_NOAVAILABILITY"),
+    LACK_OF_PLACES("UNAVAILABLE_NOAVAILABILITY"),
     WRONG_HOTEL("Такого отеля не существует"),
     ENTER_ID("Введите ID гостя: "),
+    INCREASE_HOTEL_AVAILABILITY("Доступность мест в отеле увеличена на 1"),
 
     ERROR_MESSAGE_EMPTY_ID("Поле ID не может быть пустым");
 

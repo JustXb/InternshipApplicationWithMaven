@@ -11,6 +11,9 @@ public enum ControllerMessages {
     GUEST_ID_NOT_NULL("ID гостя не может быть пустым"),
     HOTEL_ID_NOT_NULL("ID отеля не может быть пустым"),
 
+    AVAILABLE("AVAILABLE"),
+    UNAVAILABLE("UNAVAILABLE"),
+
     HOTEL_SERVICE_UNAVAILABLE("Сервис отелей недоступен."),
     CHECK_IN_SUCCESS("Гость c ID %d успешно заселен в отель %d."),
     CHECK_IN_ERROR("Ошибка заселения: %s"),
@@ -21,7 +24,12 @@ public enum ControllerMessages {
     CHECK_IN_VALIDATION_ERROR("Ошибка заселения: %s"),
     CHECK_IN_AVAILABILITY_ERROR("Ошибка заселения: отель %d недоступен."),
     CHECK_IN_ERROR_WITH_ID("Ошибка при заселении гостя с ID %d: %s"),
-    CHECK_IN_NO_VACANCY("Ошибка заселения: в отеле %d нет свободных мест.");
+    CHECK_IN_NO_VACANCY("Ошибка заселения: в отеле %d нет свободных мест."),
+    JSON_ERROR("Ошибка разбора JSON: %s"),
+    JSON_ERROR_WRONG_TYPE("Ошибка: значение '%s' не может быть преобразовано в число для поля '%s'."),
+    JSON_WRONG_TYPE_SERIALIZATION("Ошибка десериализации: Неверное значение '%s' для поля '%s'. Ожидается значение типа int."),
+
+    INTERNAL_SERVER_ERROR("Внутренняя ошибка сервера: %s");
 
     private final String message;
 

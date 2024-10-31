@@ -177,11 +177,11 @@ public class BookingService {
                 return null;
             }
 
-            // Валидация адреса
-            if (validateAddress(address)) {
-                System.out.println(ServiceMessages.WRONG_ADDRESS.getMessage());
-                address = null; // повторить ввод
-            }
+//            // Валидация адреса
+//            if (validateAddress(address)) {
+//                System.out.println(ServiceMessages.WRONG_ADDRESS.getMessage());
+//                address = null; // повторить ввод
+//            }
         }
         return address;
     }
@@ -310,7 +310,12 @@ public class BookingService {
     }
 
     private boolean validateAge(int age) {
-        return age < 0 || age > 120;
+        try {
+            return age < 0 || age > 120;
+        }
+        catch (NumberFormatException e) {
+            throw new NumberFormatException("Возраст должен быть числом");
+        }
     }
 
     private String getValidInput(String prompt, String errorMessage) {
@@ -356,7 +361,18 @@ public class BookingService {
     }
 
 
-    private boolean validateAddress(String address) {
+    private boolean validateAddress(String address) throws EnteredNotValidDataException {
+        if(address == null || address.trim().isEmpty()){
+            throw new EnteredNotValidDataException("Адрес не может быть пустым");
+        }
+        if(address.length() > 20){
+            throw new EnteredNotValidDataException("Адрес не может быть длиннее 30 символов");
+        }
+
+        if(!Character.isUpperCase(address.charAt(0))){
+            throw new EnteredNotValidDataException("Адрес должен начинаться с большой буквы");
+        }
+
         return address == null || address.length() > 30 || !Character.isUpperCase(address.charAt(0));
     }
 
@@ -461,7 +477,7 @@ public class BookingService {
         }
     }
 
-    public void addGuest(GuestEntity guestEntity) throws IOException, EnteredNotValidDataException {
+    public void addGuest(GuestEntity guestEntity) throws EnteredNotValidDataException {
         String validationError = validateCreateGuestHttp(guestEntity);
         if (validationError != null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, validationError);

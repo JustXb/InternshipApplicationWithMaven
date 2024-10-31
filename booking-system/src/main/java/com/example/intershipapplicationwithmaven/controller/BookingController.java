@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -53,7 +52,7 @@ public class BookingController {
         catch (ResponseStatusException ex) {
             bookingService.sendBookingToMonitoring(EventType.MISTAKE,  ControllerMessages.ADD_GUEST_ERROR.getMessage(ex.getMessage()));
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getReason());
-        } catch (IOException e) {
+        } catch (Exception e) {
             bookingService.sendBookingToMonitoring(EventType.MISTAKE,  ControllerMessages.ADD_GUEST_ERROR.getMessage(e.getMessage()));
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ControllerMessages.ADD_GUEST_ERROR.getMessage(e.getMessage()));
         }
@@ -115,7 +114,6 @@ public class BookingController {
     }
 
 
-//    TODO: Проверка на null
     @PostMapping("/checkIn")
     public ResponseEntity<String> checkIn(@RequestBody Map<String, Integer> request) {
         Integer guestId = request.get("guestId");
@@ -148,17 +146,21 @@ public class BookingController {
             ResponseEntity<String> availabilityResponse = restTemplate.postForEntity(HOTEL_SERVICE_URL +
                     CHECK_AVAILABILITY_URL + hotelId, null, String.class);
 
-            if ("AVAILABLE".equals(availabilityResponse.getBody())) {
+            if (ControllerMessages.AVAILABLE.getMessage().equals(availabilityResponse.getBody())) {
                 bookingService.bookRoom(guestEntity, hotelId);
                 bookingService.sendBookingToMonitoring(EventType.SUCCESS, ControllerMessages.CHECK_IN_SUCCESS.getMessage(guestId, hotelId));
                 return ResponseEntity.ok(ControllerMessages.CHECK_IN_SUCCESS.getMessage(guestId, hotelId));
-            } else if ("UNAVAILABLE".equals(availabilityResponse.getBody())) {
+            } else if (ControllerMessages.UNAVAILABLE.getMessage().equals(availabilityResponse.getBody())) {
                 bookingService.sendBookingToMonitoring(EventType.MISTAKE, ControllerMessages.CHECK_IN_AVAILABILITY_ERROR.getMessage(hotelId));
                 return ResponseEntity.badRequest().body(ControllerMessages.CHECK_IN_AVAILABILITY_ERROR.getMessage(hotelId));
             } else {
                 bookingService.sendBookingToMonitoring(EventType.MISTAKE, ControllerMessages.CHECK_IN_NO_VACANCY.getMessage(hotelId));
                 return ResponseEntity.badRequest().body(ControllerMessages.CHECK_IN_NO_VACANCY.getMessage(hotelId));
             }
+
+        } catch (ResponseStatusException ex) {
+            bookingService.sendBookingToMonitoring(EventType.MISTAKE, ControllerMessages.CHECK_IN_ERROR_WITH_ID.getMessage(guestId, ex.getReason()));
+            return ResponseEntity.status(ex.getStatus()).body(ControllerMessages.CHECK_IN_ERROR_WITH_ID.getMessage(guestId, ex.getReason()));
 
         } catch (Exception e) {
             bookingService.sendBookingToMonitoring(EventType.MISTAKE, ControllerMessages.CHECK_IN_ERROR_WITH_ID.getMessage(guestId, e.getMessage()));

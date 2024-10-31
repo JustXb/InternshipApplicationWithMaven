@@ -16,12 +16,12 @@ import java.util.Date;
 
 @Service
 public class MonitoringService {
-    private static final String LOG_FILE_PREFIX = "monitoring_"; // Префикс имени файла
-    private static final long MAX_FILE_SIZE = 1024 * 1024; // Максимальный размер файла (1 МБ)
-    private static final String RECORD_SEPARATOR = "\n"; // Разделитель записей
-    private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd-MM-yyyy"); // Формат даты
+    private static final String LOG_FILE_PREFIX = "monitoring_";
+    private static final long MAX_FILE_SIZE = 1024 * 1024;
+    private static final String RECORD_SEPARATOR = "\n";
+    private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("dd-MM-yyyy");
 
-    @Value("${LOG_DIRECTORY:logs}") // Значение по умолчанию
+    @Value("${LOG_DIRECTORY:logs}")
     private String logDirectory;
 
     @PostConstruct
@@ -77,6 +77,5 @@ public class MonitoringService {
     public void receiveMessage(MonitoringEvent event) {
         System.out.println("Получено сообщение: " + event);
         logEvent(event.getEventType().toString(), event.getMessage());
-        // Логика обработки полученного сообщения
     }
 }

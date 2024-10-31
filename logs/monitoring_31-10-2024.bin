@@ -1,0 +1,81 @@
+Thu_Oct_31_11-23-17_MSK_2024 MISTAKE Ошибка при удалении гостя с ID 2: Гость с ID 2 не найден.
+Thu_Oct_31_11-23-21_MSK_2024 SUCCESS Гость с ID 1 успешно удален, доступность отеля 1 увеличена.
+Thu_Oct_31_11-23-51_MSK_2024 MISTAKE Ошибка добавления гостя: Имя гостя не может быть пустым
+Thu_Oct_31_11-23-58_MSK_2024 MISTAKE Ошибка добавления гостя: Номер паспорта должен содержать ровно 6 цифр.
+Thu_Oct_31_11-24-32_MSK_2024 CREATED Гость GuestEntity{id=2, name='Feeod', age=22, passportNumber='115588', address='Moscow'} успешно добавлен 
+Thu_Oct_31_11-32-02_MSK_2024 MISTAKE Ошибка добавления гостя: Ошибка разбора JSON: JSON parse error: Unexpected character ('}' (code 125)): was expecting double-quote to start field name; nested exception is com.fasterxml.jackson.core.JsonParseException: Unexpected character ('}' (code 125)): was expecting double-quote to start field name
+ at [Source: (org.springframework.util.StreamUtils$NonClosingInputStream); line: 6, column: 2]
+Thu_Oct_31_11-34-40_MSK_2024 MISTAKE Ошибка добавления гостя: Ошибка разбора JSON: JSON parse error: Unexpected character ('}' (code 125)): was expecting double-quote to start field name; nested exception is com.fasterxml.jackson.core.JsonParseException: Unexpected character ('}' (code 125)): was expecting double-quote to start field name
+ at [Source: (org.springframework.util.StreamUtils$NonClosingInputStream); line: 6, column: 2]
+Thu_Oct_31_11-34-51_MSK_2024 MISTAKE Ошибка добавления гостя: Ошибка разбора JSON: JSON parse error: Cannot construct instance of `com.example.intershipapplicationwithmaven.repository.entity.GuestEntity` (although at least one Creator exists): no String-argument constructor/factory method to deserialize from String value ('name'); nested exception is com.fasterxml.jackson.databind.exc.MismatchedInputException: Cannot construct instance of `com.example.intershipapplicationwithmaven.repository.entity.GuestEntity` (although at least one Creator exists): no String-argument constructor/factory method to deserialize from String value ('name')
+ at [Source: (org.springframework.util.StreamUtils$NonClosingInputStream); line: 2, column: 5]
+Thu_Oct_31_11-35-26_MSK_2024 MISTAKE Ошибка добавления гостя: Гость с такими паспортными данными уже существует
+Thu_Oct_31_11-35-31_MSK_2024 CREATED Гость GuestEntity{id=3, name='Feeod', age=22, passportNumber='336655', address='Moscow'} успешно добавлен 
+Thu_Oct_31_11-35-36_MSK_2024 MISTAKE Ошибка добавления гостя: String index out of range: 0
+Thu_Oct_31_11-35-49_MSK_2024 MISTAKE Ошибка добавления гостя: Номер паспорта должен содержать ровно 6 цифр.
+Thu_Oct_31_11-35-55_MSK_2024 MISTAKE Ошибка добавления гостя: Имя гостя не может быть пустым
+Thu_Oct_31_11-36-01_MSK_2024 MISTAKE Ошибка добавления гостя: String index out of range: 0
+Thu_Oct_31_11-36-04_MSK_2024 MISTAKE Ошибка добавления гостя: 400 BAD_REQUEST "Неверно указан адрес"
+Thu_Oct_31_11-36-24_MSK_2024 MISTAKE Ошибка добавления гостя: Гость с такими паспортными данными уже существует
+Thu_Oct_31_11-36-31_MSK_2024 MISTAKE Ошибка добавления гостя: Имя гостя не может быть пустым
+Thu_Oct_31_11-36-46_MSK_2024 MISTAKE Ошибка при заселении гостя с ID 1: 404 NOT_FOUND "Гость с ID 1 не найден."
+Thu_Oct_31_11-36-55_MSK_2024 MISTAKE Ошибка заселения: отель 7 недоступен.
+Thu_Oct_31_11-36-59_MSK_2024 MISTAKE Ошибка заселения: в отеле 3 нет свободных мест.
+Thu_Oct_31_11-37-28_MSK_2024 SUCCESS Гость c ID 2 успешно заселен в отель 2.
+Thu_Oct_31_11-41-14_MSK_2024 MISTAKE Ошибка добавления гостя: Ошибка разбора JSON: JSON parse error: Cannot construct instance of `java.util.LinkedHashMap` (although at least one Creator exists): no String-argument constructor/factory method to deserialize from String value ('guestId'); nested exception is com.fasterxml.jackson.databind.exc.MismatchedInputException: Cannot construct instance of `java.util.LinkedHashMap` (although at least one Creator exists): no String-argument constructor/factory method to deserialize from String value ('guestId')
+ at [Source: (org.springframework.util.StreamUtils$NonClosingInputStream); line: 9, column: 5]
+Thu_Oct_31_11-45-44_MSK_2024 MISTAKE Ошибка добавления гостя: Ошибка разбора JSON: JSON parse error: Cannot construct instance of `java.util.LinkedHashMap` (although at least one Creator exists): no String-argument constructor/factory method to deserialize from String value ('guestId'); nested exception is com.fasterxml.jackson.databind.exc.MismatchedInputException: Cannot construct instance of `java.util.LinkedHashMap` (although at least one Creator exists): no String-argument constructor/factory method to deserialize from String value ('guestId')
+ at [Source: (org.springframework.util.StreamUtils$NonClosingInputStream); line: 9, column: 5]
+Thu_Oct_31_11-46-53_MSK_2024 MISTAKE Ошибка добавления гостя: Ошибка разбора JSON: JSON parse error: Cannot construct instance of `java.util.LinkedHashMap` (although at least one Creator exists): no String-argument constructor/factory method to deserialize from String value ('guestId'); nested exception is com.fasterxml.jackson.databind.exc.MismatchedInputException: Cannot construct instance of `java.util.LinkedHashMap` (although at least one Creator exists): no String-argument constructor/factory method to deserialize from String value ('guestId')
+ at [Source: (org.springframework.util.StreamUtils$NonClosingInputStream); line: 9, column: 5]
+Thu_Oct_31_11-47-42_MSK_2024 MISTAKE Ошибка разбора JSON: JSON parse error: Cannot construct instance of `java.util.LinkedHashMap` (although at least one Creator exists): no String-argument constructor/factory method to deserialize from String value ('guestId'); nested exception is com.fasterxml.jackson.databind.exc.MismatchedInputException: Cannot construct instance of `java.util.LinkedHashMap` (although at least one Creator exists): no String-argument constructor/factory method to deserialize from String value ('guestId')
+ at [Source: (org.springframework.util.StreamUtils$NonClosingInputStream); line: 9, column: 5]
+Thu_Oct_31_11-51-17_MSK_2024 MISTAKE Ошибка заселения: Гость уже заселен в другой отель.
+Thu_Oct_31_11-52-19_MSK_2024 MISTAKE Ошибка заселения: Гость уже заселен в другой отель.
+Thu_Oct_31_11-53-16_MSK_2024 MISTAKE Ошибка добавления гостя: String index out of range: 0
+Thu_Oct_31_11-53-30_MSK_2024 MISTAKE Ошибка добавления гостя: String index out of range: 0
+Thu_Oct_31_11-56-05_MSK_2024 MISTAKE Ошибка добавления гостя: String index out of range: 0
+Thu_Oct_31_11-56-22_MSK_2024 MISTAKE Ошибка добавления гостя: Адрес не может быть пустым
+Thu_Oct_31_11-56-45_MSK_2024 MISTAKE Ошибка добавления гостя: Адрес должен начинаться с большой буквы
+Thu_Oct_31_11-57-17_MSK_2024 MISTAKE Ошибка заселения: Гость уже заселен в другой отель.
+Thu_Oct_31_11-57-25_MSK_2024 MISTAKE Ошибка при заселении гостя с ID 1: 404 NOT_FOUND "Гость с ID 1 не найден."
+Thu_Oct_31_11-58-30_MSK_2024 MISTAKE Ошибка при заселении гостя с ID 1: 404 NOT_FOUND "Гость с ID 1 не найден."
+Thu_Oct_31_12-01-22_MSK_2024 MISTAKE Ошибка при заселении гостя с ID 1: 404 NOT_FOUND "Гость с ID 1 не найден."
+Thu_Oct_31_12-01-40_MSK_2024 MISTAKE Ошибка при заселении гостя с ID -1: 404 NOT_FOUND "Гость с ID -1 не найден."
+Thu_Oct_31_12-01-50_MSK_2024 MISTAKE Ошибка разбора JSON: JSON parse error: Unexpected character (',' (code 44)): expected a value; nested exception is com.fasterxml.jackson.core.JsonParseException: Unexpected character (',' (code 44)): expected a value
+ at [Source: (org.springframework.util.StreamUtils$NonClosingInputStream); line: 9, column: 17]
+Thu_Oct_31_12-01-58_MSK_2024 MISTAKE Ошибка разбора JSON: JSON parse error: Cannot deserialize value of type `java.lang.Integer` from String "ff": not a valid `java.lang.Integer` value; nested exception is com.fasterxml.jackson.databind.exc.InvalidFormatException: Cannot deserialize value of type `java.lang.Integer` from String "ff": not a valid `java.lang.Integer` value
+ at [Source: (org.springframework.util.StreamUtils$NonClosingInputStream); line: 9, column: 16] (through reference chain: java.util.LinkedHashMap["guestId"])
+Thu_Oct_31_12-03-57_MSK_2024 MISTAKE Ошибка при заселении гостя с ID 1: Гость с ID 1 не найден.
+Thu_Oct_31_12-04-10_MSK_2024 MISTAKE Ошибка разбора JSON: JSON parse error: Cannot deserialize value of type `java.lang.Integer` from String "ff": not a valid `java.lang.Integer` value; nested exception is com.fasterxml.jackson.databind.exc.InvalidFormatException: Cannot deserialize value of type `java.lang.Integer` from String "ff": not a valid `java.lang.Integer` value
+ at [Source: (org.springframework.util.StreamUtils$NonClosingInputStream); line: 9, column: 16] (through reference chain: java.util.LinkedHashMap["guestId"])
+Thu_Oct_31_12-10-53_MSK_2024 MISTAKE Ошибка разбора JSON: JSON parse error: Cannot deserialize value of type `java.lang.Integer` from String "Feeod": not a valid `java.lang.Integer` value; nested exception is com.fasterxml.jackson.databind.exc.InvalidFormatException: Cannot deserialize value of type `java.lang.Integer` from String "Feeod": not a valid `java.lang.Integer` value
+ at [Source: (org.springframework.util.StreamUtils$NonClosingInputStream); line: 2, column: 13] (through reference chain: java.util.LinkedHashMap["name"])
+Thu_Oct_31_12-11-34_MSK_2024 MISTAKE Ошибка разбора JSON: JSON parse error: Cannot deserialize value of type `int` from String "ff": not a valid `int` value; nested exception is com.fasterxml.jackson.databind.exc.InvalidFormatException: Cannot deserialize value of type `int` from String "ff": not a valid `int` value
+ at [Source: (org.springframework.util.StreamUtils$NonClosingInputStream); line: 3, column: 12] (through reference chain: com.example.intershipapplicationwithmaven.repository.entity.GuestEntity["age"])
+Thu_Oct_31_12-11-53_MSK_2024 MISTAKE Ошибка разбора JSON: JSON parse error: Cannot deserialize value of type `int` from String "ff": not a valid `int` value; nested exception is com.fasterxml.jackson.databind.exc.InvalidFormatException: Cannot deserialize value of type `int` from String "ff": not a valid `int` value
+ at [Source: (org.springframework.util.StreamUtils$NonClosingInputStream); line: 3, column: 12] (through reference chain: com.example.intershipapplicationwithmaven.repository.entity.GuestEntity["age"])
+Thu_Oct_31_12-17-06_MSK_2024 MISTAKE Ошибка разбора JSON: JSON parse error: Cannot deserialize value of type `int` from String "ff": not a valid `int` value; nested exception is com.fasterxml.jackson.databind.exc.InvalidFormatException: Cannot deserialize value of type `int` from String "ff": not a valid `int` value
+ at [Source: (org.springframework.util.StreamUtils$NonClosingInputStream); line: 3, column: 12] (through reference chain: com.example.intershipapplicationwithmaven.repository.entity.GuestEntity["age"])
+Thu_Oct_31_12-17-55_MSK_2024 MISTAKE Ошибка разбора JSON: JSON parse error: Cannot deserialize value of type `int` from String "ff": not a valid `int` value; nested exception is com.fasterxml.jackson.databind.exc.InvalidFormatException: Cannot deserialize value of type `int` from String "ff": not a valid `int` value
+ at [Source: (org.springframework.util.StreamUtils$NonClosingInputStream); line: 3, column: 12] (through reference chain: com.example.intershipapplicationwithmaven.repository.entity.GuestEntity["age"])
+Thu_Oct_31_12-20-54_MSK_2024 MISTAKE Ошибка десериализации: Неверное значение 'ff' для поля 'age'. Ожидается значение типа int.
+Thu_Oct_31_12-21-03_MSK_2024 MISTAKE Ошибка разбора JSON: JSON parse error: Cannot construct instance of `com.example.intershipapplicationwithmaven.repository.entity.GuestEntity` (although at least one Creator exists): no String-argument constructor/factory method to deserialize from String value ('name'); nested exception is com.fasterxml.jackson.databind.exc.MismatchedInputException: Cannot construct instance of `com.example.intershipapplicationwithmaven.repository.entity.GuestEntity` (although at least one Creator exists): no String-argument constructor/factory method to deserialize from String value ('name')
+ at [Source: (org.springframework.util.StreamUtils$NonClosingInputStream); line: 2, column: 5]
+Thu_Oct_31_12-21-14_MSK_2024 MISTAKE Ошибка добавления гостя: 400 BAD_REQUEST "Неверно указан возраст"
+Thu_Oct_31_12-21-23_MSK_2024 MISTAKE Ошибка разбора JSON: JSON parse error: Unexpected end-of-input: expected close marker for Object (start marker at [Source: (org.springframework.util.StreamUtils$NonClosingInputStream); line: 1, column: 1]); nested exception is com.fasterxml.jackson.core.io.JsonEOFException: Unexpected end-of-input: expected close marker for Object (start marker at [Source: (org.springframework.util.StreamUtils$NonClosingInputStream); line: 1, column: 1])
+ at [Source: (org.springframework.util.StreamUtils$NonClosingInputStream); line: 11, column: 1]
+Thu_Oct_31_12-24-04_MSK_2024 MISTAKE Ошибка добавления гостя: Адрес должен начинаться с большой буквы
+Thu_Oct_31_12-24-10_MSK_2024 MISTAKE Ошибка добавления гостя: Гость с такими паспортными данными уже существует
+Thu_Oct_31_12-24-15_MSK_2024 MISTAKE Ошибка десериализации: Неверное значение 'ss' для поля 'age'. Ожидается значение типа int.
+Thu_Oct_31_12-24-26_MSK_2024 MISTAKE Ошибка добавления гостя: Гость с такими паспортными данными уже существует
+Thu_Oct_31_12-24-32_MSK_2024 CREATED Гость GuestEntity{id=4, name='Feeod', age=23, passportNumber='123498', address='NNn'} успешно добавлен 
+Thu_Oct_31_12-27-11_MSK_2024 MISTAKE Ошибка десериализации: Неверное значение '2gt3' для поля 'age'. Ожидается значение типа int.
+Thu_Oct_31_12-27-49_MSK_2024 MISTAKE Ошибка десериализации: Неверное значение '2gt3' для поля 'age'. Ожидается значение типа int.
+Thu_Oct_31_12-28-02_MSK_2024 MISTAKE Ошибка разбора JSON: JSON parse error: Unexpected character ('"' (code 34)): was expecting comma to separate Object entries; nested exception is com.fasterxml.jackson.core.JsonParseException: Unexpected character ('"' (code 34)): was expecting comma to separate Object entries
+ at [Source: (org.springframework.util.StreamUtils$NonClosingInputStream); line: 3, column: 14]
+Thu_Oct_31_12-28-21_MSK_2024 MISTAKE Ошибка добавления гостя: Номер паспорта должен содержать ровно 6 цифр.
+Thu_Oct_31_12-28-28_MSK_2024 MISTAKE Ошибка добавления гостя: 400 BAD_REQUEST "Неверно указан возраст"
+Thu_Oct_31_12-28-33_MSK_2024 CREATED Гость GuestEntity{id=5, name='Feeod', age=99, passportNumber='121234', address='NNn'} успешно добавлен 
+Thu_Oct_31_12-28-58_MSK_2024 MISTAKE Ошибка десериализации: Неверное значение '1ds' для поля 'guestId'. Ожидается значение типа int.
+Thu_Oct_31_12-29-06_MSK_2024 MISTAKE Ошибка при заселении гостя с ID 1: Гость с ID 1 не найден.

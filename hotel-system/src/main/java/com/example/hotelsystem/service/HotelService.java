@@ -67,7 +67,7 @@ public class HotelService {
                             out.println(ServiceMessages.UNAVAILABLE.getMessage());
                         } else
                             if (!hotelAvailability.decreaseAvailableRooms()) {
-                                out.println(ServiceMessages.UNAVAILABLE_NOAVAILABILITY.getMessage());
+                                out.println(ServiceMessages.LACK_OF_PLACES.getMessage());
                             } else {
                                 hotelAvailabilityRepository.save(hotelAvailability);
                                 out.println(ServiceMessages.AVAILABLE.getMessage());
@@ -93,26 +93,58 @@ public class HotelService {
     }
 
 
+
+
     public boolean isHotelAvailable(int id) {
-        // Проверка, существует ли отель с указанным ID в базе MongoDB
         Optional<HotelEntity> hotelOpt = hotelRepository.findById(id);
 
-        // Если отель не существует, логируем предупреждение и возвращаем false
-        if (!hotelOpt.isPresent()) {
+        if (hotelOpt.isEmpty()) {
             LOGGER.warning(ServiceMessages.WRONG_HOTEL.getMessage());
             return true;
         }
 
-        // Ищем доступность отеля по ID
         Optional<HotelAvailablilityEntity> hotelAvailabilityOpt = hotelAvailabilityRepository.findById(id);
 
-        // Если доступность для отеля не найдена, возвращаем false
-        if (!hotelAvailabilityOpt.isPresent()) {
+        if (hotelAvailabilityOpt.isEmpty()) {
             LOGGER.warning(ServiceMessages.UNAVAILABLE.getMessage());
             return true;
         }
 
         return false;
+    }
+
+    public String checkHotelAvailability(int hotelId) {
+        Optional<HotelAvailablilityEntity> hotelAvailability = hotelAvailabilityRepository.findById(hotelId);
+        if (hotelAvailability.isEmpty()) {
+            return ServiceMessages.UNAVAILABLE.getMessage();
+        }
+
+        HotelAvailablilityEntity availability = hotelAvailability.get();
+        if (!availability.decreaseAvailableRooms()) {
+            return ServiceMessages.LACK_OF_PLACES.getMessage();
+        }
+
+        hotelAvailabilityRepository.save(availability);
+        return ServiceMessages.AVAILABLE.getMessage();
+    }
+
+    public String increaseAvailability(int hotelId){
+        Optional<HotelAvailablilityEntity> hotelAvailability = hotelAvailabilityRepository.findById(hotelId);
+        if (hotelAvailability.isEmpty()) {
+            return ServiceMessages.UNAVAILABLE.getMessage();
+        }
+        HotelAvailablilityEntity availability = hotelAvailability.get();
+        availability.setAvailability(availability.getAvailability() + 1);
+        hotelAvailabilityRepository.save(availability);
+        return ServiceMessages.INCREASE_HOTEL_AVAILABILITY.getMessage();
+    }
+
+    public String checkRoomAvailability(int hotelId) {
+        if (!isHotelAvailable(hotelId)) {
+            return ServiceMessages.AVAILABLE.getMessage();
+        } else {
+            return ServiceMessages.UNAVAILABLE.getMessage();
+        }
     }
 
 
