@@ -129,10 +129,15 @@ public class BookingController {
 
         try {
             GuestEntity guestEntity = bookingService.getGuestByID(guestId);
-            ResponseEntity<String> validationResponse = bookingService.validateCheckInHttp(guestId, hotelId);
-            if (!validationResponse.getStatusCode().is2xxSuccessful()) {
-                bookingService.sendBookingToMonitoring(EventType.MISTAKE, ControllerMessages.CHECK_IN_ERROR.getMessage(validationResponse.getBody()));
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ControllerMessages.CHECK_IN_ERROR.getMessage(validationResponse.getBody()));
+
+
+            String validationResult = bookingService.validateCheckInHttp(guestId);
+
+            if (validationResult.equals(ControllerMessages.WRONG_GUEST_ID.getMessage()) ||
+                    validationResult.equals(ControllerMessages.EXIST_CHECKIIN.getMessage())) {
+
+                bookingService.sendBookingToMonitoring(EventType.MISTAKE, ControllerMessages.CHECK_IN_ERROR.getMessage(validationResult));
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ControllerMessages.CHECK_IN_ERROR.getMessage(validationResult));
             }
 
             try {

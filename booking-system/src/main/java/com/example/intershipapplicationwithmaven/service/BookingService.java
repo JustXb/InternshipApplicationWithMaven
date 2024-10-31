@@ -528,20 +528,21 @@ public class BookingService {
         }
     }
 
-    public ResponseEntity<String> validateCheckInHttp(int guestId, int hotelId) {
-
+    public String validateCheckInHttp(int guestId) {
         // Проверяем, существует ли гость
         if (!validateCheckInGuest(guestId)) {
-            return ResponseEntity.badRequest().body(ServiceMessages.WRONG_GUEST_ID.getMessage());
+            return ServiceMessages.WRONG_GUEST_ID.getMessage();
         }
 
         // Проверяем, что гость еще не заселен
         if (!validateBookingDoubleCheckIn(guestId)) {
-            return ResponseEntity.badRequest().body(ServiceMessages.EXIST_CHECKIIN.getMessage());
+            return ServiceMessages.EXIST_CHECKIIN.getMessage();
         }
 
-        return ResponseEntity.ok(ServiceMessages.ACCESS_CHECKIN.getMessage());
+        // Возвращаем сообщение об успешной проверке
+        return ServiceMessages.ACCESS_CHECKIN.getMessage();
     }
+
 
     public void sendBookingToMonitoring(EventType eventType, String message) {
         MonitoringEvent event = new MonitoringEvent(eventType, message);
