@@ -83,3 +83,38 @@ Thu_Oct_31_12-54-37_MSK_2024 MISTAKE Ошибка при удалении гос
 Thu_Oct_31_12-54-58_MSK_2024 MISTAKE Ошибка десериализации: Неверное значение 'Feeod' для поля 'name'. Ожидается значение типа int.
 Thu_Oct_31_12-55-19_MSK_2024 MISTAKE Ошибка добавления гостя: Гость с такими паспортными данными уже существует
 Thu_Oct_31_12-55-48_MSK_2024 SUCCESS Гость с ID 2 успешно удален, доступность отеля 2 увеличена.
+Thu_Oct_31_13-25-07_MSK_2024 MISTAKE Ошибка: Request method 'POST' not supported
+Thu_Oct_31_13-25-11_MSK_2024 MISTAKE Ошибка при обновлении гостя с ID 4: Адрес должен начинаться с большой буквы
+Thu_Oct_31_13-25-16_MSK_2024 MISTAKE Ошибка при обновлении гостя с ID 4: Гость с паспортными данными 121234 уже существует. 
+Thu_Oct_31_13-25-25_MSK_2024 SUCCESS Гость с ID 5 успешно обновлен.
+Thu_Oct_31_13-25-36_MSK_2024 MISTAKE Ошибка разбора JSON: JSON parse error: Cannot construct instance of `com.example.intershipapplicationwithmaven.repository.entity.GuestEntity` (although at least one Creator exists): no String-argument constructor/factory method to deserialize from String value ('name'); nested exception is com.fasterxml.jackson.databind.exc.MismatchedInputException: Cannot construct instance of `com.example.intershipapplicationwithmaven.repository.entity.GuestEntity` (although at least one Creator exists): no String-argument constructor/factory method to deserialize from String value ('name')
+ at [Source: (org.springframework.util.StreamUtils$NonClosingInputStream); line: 2, column: 5]
+Thu_Oct_31_13-28-21_MSK_2024 MISTAKE Ошибка при обновлении гостя с ID 5: Неверно указан возраст
+Thu_Oct_31_13-28-30_MSK_2024 MISTAKE Ошибка при обновлении гостя с ID 5: Адрес не может быть длиннее 30 символов
+Thu_Oct_31_13-28-35_MSK_2024 MISTAKE Ошибка при обновлении гостя с ID 5: Имя гостя не может быть длиннее 20 символов
+Thu_Oct_31_13-30-04_MSK_2024 MISTAKE Ошибка при обновлении гостя с ID 5: Имя гостя должно начинаться с большой буквы
+Thu_Oct_31_13-30-11_MSK_2024 SUCCESS Гость с ID 5 успешно обновлен.
+Thu_Oct_31_13-30-18_MSK_2024 MISTAKE Ошибка при обновлении гостя с ID 99: Гостя с ID 99 не существует.
+Thu_Oct_31_13-31-36_MSK_2024 MISTAKE Ошибка при заселении гостя с ID 1: Гостя с ID 1 не существует.
+Thu_Oct_31_13-31-42_MSK_2024 MISTAKE Ошибка при заселении гостя с ID 2: Гостя с ID 2 не существует.
+Thu_Oct_31_13-31-46_MSK_2024 MISTAKE Ошибка заселения: отель 7 недоступен.
+Thu_Oct_31_13-31-51_MSK_2024 MISTAKE Ошибка заселения: в отеле 3 нет свободных мест.
+Thu_Oct_31_13-31-55_MSK_2024 MISTAKE Ошибка при заселении гостя с ID 5: d != com.example.intershipapplicationwithmaven.repository.entity.GuestEntity
+Thu_Oct_31_13-32-24_MSK_2024 MISTAKE Ошибка заселения: Гость уже заселен в другой отель.
+Thu_Oct_31_13-32-27_MSK_2024 MISTAKE Ошибка заселения: Гость уже заселен в другой отель.
+Thu_Oct_31_13-32-31_MSK_2024 MISTAKE Ошибка при заселении гостя с ID 6: Гостя с ID 6 не существует.
+Thu_Oct_31_13-32-41_MSK_2024 MISTAKE Ошибка заселения: в отеле 3 нет свободных мест.
+Thu_Oct_31_13-32-45_MSK_2024 MISTAKE Ошибка заселения: отель 6 недоступен.
+Thu_Oct_31_13-32-49_MSK_2024 MISTAKE Ошибка при заселении гостя с ID 3: d != com.example.intershipapplicationwithmaven.repository.entity.GuestEntity
+Thu_Oct_31_13-34-54_MSK_2024 MISTAKE Ошибка при заселении гостя с ID 4: d != com.example.intershipapplicationwithmaven.repository.entity.GuestEntity
+Thu_Oct_31_13-35-08_MSK_2024 MISTAKE Ошибка добавления гостя: Гость с такими паспортными данными уже существует
+Thu_Oct_31_13-35-12_MSK_2024 CREATED Гость GuestEntity{id=6, name='Geeod', age=12, passportNumber='123123', address='Moscow'} успешно добавлен 
+Thu_Oct_31_13-36-32_MSK_2024 MISTAKE Ошибка при заселении гостя с ID 6: d != com.example.intershipapplicationwithmaven.repository.entity.GuestEntity
+Thu_Oct_31_13-37-58_MSK_2024 CREATED Гость GuestEntity{id=7, name='Geeod', age=12, passportNumber='115588', address='Moscow'} успешно добавлен 
+Thu_Oct_31_13-43-57_MSK_2024 CREATED Гость GuestEntity{id=8, name='Geeod', age=12, passportNumber='115388', address='Moscow'} успешно добавлен 
+Thu_Oct_31_13-44-00_MSK_2024 CREATED Гость GuestEntity{id=9, name='Geeod', age=12, passportNumber='115328', address='Moscow'} успешно добавлен 
+Thu_Oct_31_13-44-03_MSK_2024 CREATED Гость GuestEntity{id=10, name='Geeod', age=12, passportNumber='115322', address='Moscow'} успешно добавлен 
+Thu_Oct_31_13-47-03_MSK_2024 MISTAKE Ошибка при заселении гостя с ID 8: d != com.example.intershipapplicationwithmaven.repository.entity.GuestEntity
+Thu_Oct_31_13-47-41_MSK_2024 MISTAKE Ошибка при заселении гостя с ID 9: d != com.example.intershipapplicationwithmaven.repository.entity.GuestEntity
+Thu_Oct_31_13-48-12_MSK_2024 MISTAKE Ошибка заселения: Сервис отелей недоступен.
+Thu_Oct_31_13-48-25_MSK_2024 SUCCESS Гость c ID 10 успешно заселен в отель 2.

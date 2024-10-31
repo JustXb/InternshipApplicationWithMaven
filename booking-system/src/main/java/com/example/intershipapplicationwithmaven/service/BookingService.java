@@ -217,7 +217,7 @@ public class BookingService {
     public void bookRoom(GuestEntity guestId, int hotelId) {
         BookingEntity booking = new BookingEntity(guestId, hotelId);
         bookingRepository.save(booking);
-        System.out.println(ServiceMessages.CHECK_IN_SUCCESS.getMessage(guestId, hotelId));
+        System.out.println(ServiceMessages.CHECK_IN_SUCCESS.getMessage(guestId.getId(), hotelId));
     }
 
     public boolean validateCheckInGuest(int guestId) {
