@@ -23,7 +23,7 @@ public class MonitoringController {
     public ResponseEntity<String> logEvent(@RequestBody MonitoringEvent event) {
         try {
             // Логируем событие через сервис мониторинга
-            monitoringService.logEvent(event.getEventType().toString(), event.getMessage());
+            monitoringService.logEvent(event.getEventType(), event.getMessage());
             return ResponseEntity.status(HttpStatus.OK).body("Событие успешно зарегистрировано");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Ошибка при обработке события");

@@ -9,11 +9,9 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class HotelSystemApplication implements CommandLineRunner {
 
-    private final HotelService hotelService;
 
     @Autowired
-    public HotelSystemApplication(HotelService hotelService) {
-        this.hotelService = hotelService;
+    public HotelSystemApplication() {
     }
 
     public static void main(String[] args) {
@@ -22,6 +20,5 @@ public class HotelSystemApplication implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        hotelService.responseHotels();  // Запуск сервиса обработки гостиниц
     }
 }

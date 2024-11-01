@@ -72,7 +72,7 @@ Tue_Oct_29_10-53-53_MSK_2024 SUCCESS Ошибка добавления гост�
 Tue_Oct_29_10-54-38_MSK_2024 SUCCESS Гость с ID 38 успешно обновлен.
 Tue_Oct_29_10-54-42_MSK_2024 SUCCESS Гость с ID 38 успешно обновлен.
 Tue_Oct_29_10-55-02_MSK_2024 SUCCESS Гость с ID 38 успешно обновлен.
-Tue_Oct_29_10-55-16_MSK_2024 MISTAKE Ошибка при обновлении гостя с ID 38: not-null property references a null or transient value : com.example.intershipapplicationwithmaven.repository.entity.GuestEntity.name; nested exception is org.hibernate.PropertyValueException: not-null property references a null or transient value : com.example.intershipapplicationwithmaven.repository.entity.GuestEntity.name
+Tue_Oct_29_10-55-16_MSK_2024 MISTAKE Ошибка при обновлении гостя с ID 38: not-null property references a null or transient value : GuestEntity.name; nested exception is org.hibernate.PropertyValueException: not-null property references a null or transient value : GuestEntity.name
 Tue_Oct_29_10-58-18_MSK_2024 MISTAKE Ошибка при обновлении гостя с ID 38: Номер паспорта должен содержать ровно 6 цифр.
 Tue_Oct_29_10-58-28_MSK_2024 MISTAKE Ошибка при обновлении гостя с ID 38: Гость с такими паспортными данными уже существует
 Tue_Oct_29_10-58-35_MSK_2024 MISTAKE Ошибка при обновлении гостя с ID 38: Гость с такими паспортными данными уже существует

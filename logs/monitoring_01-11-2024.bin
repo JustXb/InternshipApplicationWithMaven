@@ -1,0 +1,7 @@
+Fri_Nov_01_10-53-30_MSK_2024 MISTAKE Ошибка: Гостя с ID 1 не существует.
+Fri_Nov_01_10-54-01_MSK_2024 CREATED Гость GuestEntity{id=12, name='Geeod', age=12, passportNumber='115322', address='Moscow'} успешно добавлен 
+Fri_Nov_01_10-54-18_MSK_2024 MISTAKE Ошибка: Гостя с ID 2 не существует.
+Fri_Nov_01_10-54-23_MSK_2024 MISTAKE Ошибка: Гостя с ID 14 не существует.
+Fri_Nov_01_10-55-03_MSK_2024 SUCCESS Гость с ID 12 успешно удален. Гость не проживал в отеле.
+Fri_Nov_01_11-22-30_MSK_2024 CREATED Гость GuestEntity{id=13, name='Geeod', age=12, passportNumber='115322', address='Moscow'} успешно добавлен 
+Fri_Nov_01_11-53-48_MSK_2024 MISTAKE Ошибка добавления гостя: Гость с такими паспортными данными уже существует

@@ -3,7 +3,9 @@ import com.example.hotelsystem.repository.entity.HotelAvailablilityEntity;
 import com.example.hotelsystem.repository.entity.HotelEntity;
 import com.example.hotelsystem.transport.dto.request.HotelDTO;
 import com.example.hotelsystem.transport.dto.request.HotelAvailabilityDTO;
+import org.springframework.stereotype.Component;
 
+@Component
 public class Mapper {
 
     public static HotelDTO toHotelDTO(HotelEntity entity) {
