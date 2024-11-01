@@ -1,0 +1,26 @@
+Sat_Nov_02_01-00-42_MSK_2024 MISTAKE Ошибка добавления гостя: Гость с такими паспортными данными уже существует
+Sat_Nov_02_01-00-42_MSK_2024 MISTAKE Ошибка добавления гостя: Гость с такими паспортными данными уже существует
+Sat_Nov_02_01-00-55_MSK_2024 CREATED Гость GuestEntity{id=14, name='Geeod', age=12, passportNumber='123456', address='Moscow'} успешно добавлен 
+Sat_Nov_02_01-01-27_MSK_2024 SUCCESS Гость с ID 14 успешно обновлен.
+Sat_Nov_02_01-01-44_MSK_2024 MISTAKE Ошибка при обновлении гостя с ID 14: 115322
+Sat_Nov_02_01-01-44_MSK_2024 MISTAKE Ошибка при обновлении гостя с ID 14: Гость с паспортными данными 115322 уже существует. 
+Sat_Nov_02_01-02-15_MSK_2024 MISTAKE Ошибка: Гостя с ID 11 не существует.
+Sat_Nov_02_01-02-24_MSK_2024 MISTAKE Ошибка: null
+Sat_Nov_02_01-03-26_MSK_2024 MISTAKE Ошибка: null
+Sat_Nov_02_01-08-39_MSK_2024 MISTAKE Ошибка: Request method 'GET' not supported
+Sat_Nov_02_01-08-45_MSK_2024 MISTAKE Ошибка разбора JSON: JSON parse error: Cannot construct instance of `com.internshipbooking.transport.dto.request.BookingDto` (although at least one Creator exists): no String-argument constructor/factory method to deserialize from String value ('guestId'); nested exception is com.fasterxml.jackson.databind.exc.MismatchedInputException: Cannot construct instance of `com.internshipbooking.transport.dto.request.BookingDto` (although at least one Creator exists): no String-argument constructor/factory method to deserialize from String value ('guestId')
+ at [Source: (org.springframework.util.StreamUtils$NonClosingInputStream); line: 9, column: 5]
+Sat_Nov_02_01-08-50_MSK_2024 MISTAKE Ошибка разбора JSON: JSON parse error: Unexpected character (',' (code 44)): expected a value; nested exception is com.fasterxml.jackson.core.JsonParseException: Unexpected character (',' (code 44)): expected a value
+ at [Source: (org.springframework.util.StreamUtils$NonClosingInputStream); line: 9, column: 17]
+Sat_Nov_02_01-09-07_MSK_2024 MISTAKE Ошибка заселения: в отеле 5 нет свободных мест.
+Sat_Nov_02_01-09-14_MSK_2024 MISTAKE Ошибка заселения: в отеле 3 нет свободных мест.
+Sat_Nov_02_01-09-18_MSK_2024 SUCCESS Гость c ID 13 успешно заселен в отель 1.
+Sat_Nov_02_01-09-50_MSK_2024 MISTAKE Гостя с ID 12 не существует.
+Sat_Nov_02_01-09-57_MSK_2024 SUCCESS Гость с ID 14 успешно удален. Гость не проживал в отеле.
+Sat_Nov_02_01-10-07_MSK_2024 SUCCESS Гость с ID 13 успешно удален, доступность отеля 1 увеличена.
+Sat_Nov_02_01-32-18_MSK_2024 MISTAKE ID гостя не может быть пустым
+Sat_Nov_02_02-18-13_MSK_2024 MISTAKE ID гостя не может быть пустым
+Sat_Nov_02_02-18-22_MSK_2024 MISTAKE Ошибка: HV000030: No validator could be found for constraint 'javax.validation.constraints.NotBlank' validating type 'java.lang.Integer'. Check configuration for 'age'
+Sat_Nov_02_02-18-35_MSK_2024 MISTAKE Ошибка: HV000030: No validator could be found for constraint 'javax.validation.constraints.NotBlank' validating type 'java.lang.Integer'. Check configuration for 'age'
+Sat_Nov_02_02-19-51_MSK_2024 CREATED Гость GuestEntity{id=15, name='Grrr', age=12, passportNumber='115322', address='Moscow'} успешно добавлен 
+Sat_Nov_02_02-20-16_MSK_2024 SUCCESS Гость c ID 15 успешно заселен в отель 2.

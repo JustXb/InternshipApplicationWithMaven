@@ -2,6 +2,7 @@ package com.example.hotelsystem.controller;
 
 import com.example.hotelsystem.repository.entity.HotelEntity;
 import com.example.hotelsystem.service.HotelService;
+import com.example.hotelsystem.transport.dto.request.HotelDTO;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,8 +19,8 @@ public class HotelController {
     }
 
     @GetMapping("/getAllHotels")
-    public ResponseEntity<List<HotelEntity>> getAllHotels() {
-        List<HotelEntity> hotels = hotelService.getAllHotels();
+    public ResponseEntity<List<HotelDTO>> getAllHotels() {
+        List<HotelDTO> hotels = hotelService.getAllHotels();
         return ResponseEntity.ok(hotels);
     }
 

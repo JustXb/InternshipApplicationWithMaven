@@ -1,14 +1,17 @@
 package com.example.hotelsystem.service;
 
+import com.example.hotelsystem.mapper.Mapper;
 import com.example.hotelsystem.repository.impl.HotelAvailabilityRepository;
 import com.example.hotelsystem.repository.impl.HotelRepository;
 
 import com.example.hotelsystem.repository.entity.HotelAvailablilityEntity;
 import com.example.hotelsystem.repository.entity.HotelEntity;
 
+import com.example.hotelsystem.transport.dto.request.HotelDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.logging.Logger;
@@ -17,13 +20,15 @@ import java.util.logging.Logger;
 public class HotelService {
     private final HotelRepository hotelRepository;
     private final HotelAvailabilityRepository hotelAvailabilityRepository;
+    private final Mapper mapper;
 
     private final Logger LOGGER = Logger.getLogger(HotelService.class.getName());
 
     @Autowired
-    public HotelService(HotelAvailabilityRepository hotelAvailabilityRepository, HotelRepository hotelRepository) {
+    public HotelService(HotelAvailabilityRepository hotelAvailabilityRepository, HotelRepository hotelRepository, Mapper mapper) {
         this.hotelAvailabilityRepository = hotelAvailabilityRepository;
         this.hotelRepository = hotelRepository;
+        this.mapper = mapper;
     }
 
 
@@ -80,7 +85,13 @@ public class HotelService {
     }
 
 
-    public List<HotelEntity> getAllHotels() {
-        return hotelRepository.findAll();
+    public List<HotelDTO> getAllHotels() {
+        List<HotelDTO> hotelDTOs = new ArrayList<>();
+        List<HotelEntity> hotels = hotelRepository.findAll();
+
+        for(HotelEntity hotel: hotels){
+            hotelDTOs.add(mapper.toHotelDTO(hotel));
+        }
+        return hotelDTOs;
     }
 }

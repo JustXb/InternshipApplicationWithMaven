@@ -1,37 +1,39 @@
 package com.internshipbooking.controller;
-//TODO: webclient, entity -> dto, log -> service, fix messages(error)
-import com.example.EventType;
+//TODO: fix messages(error)
+import com.example.request.HotelDTO;
 import com.internshipbooking.exception.EnteredNotValidDataException;
 import com.internshipbooking.exception.GuestNotFoundException;
 import com.internshipbooking.repository.entity.GuestEntity;
 import com.internshipbooking.service.BookingService;
+import com.internshipbooking.transport.dto.request.BookingDto;
+import com.internshipbooking.transport.dto.request.GuestDTO;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.client.RestTemplate;
-import org.springframework.web.server.ResponseStatusException;
 
+
+import javax.validation.Valid;
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("bookings")
 public class BookingController {
     BookingService bookingService;
-    private final RestTemplate restTemplate = new RestTemplate();
 
-    private static final String HOTEL_SERVICE_URL = "http://localhost:8081/hotels";
-    private static final String CHECK_AVAILABILITY_URL = "/checkAvailability?hotelId=";
-    private static final String GET_ALL_HOTELS = "/getAllHotels";
-    private static final String INCREASE_AVAILABILITY = "/increaseAvailability?hotelId=";
 
     public BookingController(BookingService bookingService) {
         this.bookingService = bookingService;
     }
 
     @GetMapping("/getAllGuests")
-    public ResponseEntity<List<GuestEntity>> getAllGuests(){
-        return ResponseEntity.ok(bookingService.getAllGuests());
+    public ResponseEntity<List<GuestDTO>> getAllGuests(){
+        List<GuestDTO> guests = bookingService.getAllGuests();
+        return ResponseEntity.ok(guests);
+    }
+
+    @GetMapping("/getAllHotels")
+    public ResponseEntity<List<HotelDTO>> getAllHotels(){
+        return ResponseEntity.ok(bookingService.getAllHotels());
     }
 
     @GetMapping("/getGuest/{id}")
@@ -41,16 +43,15 @@ public class BookingController {
     }
 
     @PostMapping("/addGuest")
-    public ResponseEntity<String> addGuest(@RequestBody GuestEntity guestEntity) {
+    public ResponseEntity<String> addGuest(@RequestBody @Valid GuestDTO guestDto) {
         try {
-            bookingService.addGuest(guestEntity);
-            return ResponseEntity.ok(ControllerMessages.GUEST_ADDED.getMessage(guestEntity.getId()));
+            int guestId = bookingService.addGuest(guestDto);
+            return ResponseEntity.ok(ControllerMessages.GUEST_ADDED.getMessage(guestId));
         }
         catch (EnteredNotValidDataException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
         catch (Exception e) {
-            bookingService.sendBookingToMonitoring(EventType.MISTAKE,  ControllerMessages.ADD_GUEST_ERROR.getMessage(e.getMessage()));
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ControllerMessages.ADD_GUEST_ERROR.getMessage(e.getMessage()));
         }
     }
@@ -58,16 +59,16 @@ public class BookingController {
 
 
     @PutMapping("/updateGuest/{id}")
-    public ResponseEntity<String> updateGuest(@PathVariable int id, @RequestBody GuestEntity guestEntity) {
+    public ResponseEntity<String> updateGuest(@PathVariable int id,
+                                              @RequestBody @Valid GuestDTO guestDTO) {
         try {
-            bookingService.updateGuestHttp(id, guestEntity);
+            bookingService.updateGuestHttp(id, guestDTO);
             return ResponseEntity.ok(ControllerMessages.GUEST_UPDATED.getMessage(id));
         }
         catch (EnteredNotValidDataException | GuestNotFoundException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         }
         catch (Exception e) {
-            bookingService.sendBookingToMonitoring(EventType.MISTAKE, ControllerMessages.UPDATE_GUEST_ERROR.getMessage(id, e.getMessage()));
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ControllerMessages.UPDATE_GUEST_ERROR.getMessage(id, e.getMessage()));
         }
     }
@@ -75,93 +76,40 @@ public class BookingController {
     @DeleteMapping("/deleteGuest/{id}")
     public ResponseEntity<String> deleteGuest(@PathVariable int id) {
         try {
-            int hotelId = bookingService.getHotelId(id);
-            if (hotelId != 0) {
-                try {
-                    restTemplate.getForEntity(HOTEL_SERVICE_URL + GET_ALL_HOTELS, String.class);
-                } catch (Exception e) {
-                    bookingService.sendBookingToMonitoring(EventType.MISTAKE,
-                            ControllerMessages.DELETE_GUEST_ERROR.getMessage(ControllerMessages.HOTEL_SERVICE_UNAVAILABLE.getMessage()));
-                    return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).body(ControllerMessages.HOTEL_SERVICE_UNAVAILABLE.getMessage());
-                }
-
-                bookingService.deleteGuestHttp(id);
-                restTemplate.postForEntity(HOTEL_SERVICE_URL + INCREASE_AVAILABILITY + hotelId, null, String.class);
-                bookingService.sendBookingToMonitoring(EventType.SUCCESS, ControllerMessages.GUEST_DELETED.getMessage(id, hotelId));
-
-                return ResponseEntity.ok(ControllerMessages.GUEST_DELETED.getMessage(id, hotelId));
-            } else {
-                bookingService.deleteGuestHttp(id);
-                bookingService.sendBookingToMonitoring(EventType.SUCCESS, ControllerMessages.GUEST_DELETED_WITHOUT_HOTEL.getMessage(id));
-
-                return ResponseEntity.ok(ControllerMessages.GUEST_DELETED_WITHOUT_HOTEL.getMessage(id));
-            }
-        } catch (ResponseStatusException ex) {
-            bookingService.sendBookingToMonitoring(EventType.MISTAKE, ControllerMessages.DELETE_GUEST_ERROR.getMessage(id, ex.getReason()));
-            return ResponseEntity.status(ex.getStatus()).body(ControllerMessages.DELETE_GUEST_ERROR.getMessage(id, ex.getReason()));
+            String resultMessage = bookingService.deleteGuestHttp(id);
+            return ResponseEntity.ok(resultMessage);
+        } catch (GuestNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(ControllerMessages.GUEST_NOT_FOUND.getMessage(id));
         } catch (Exception e) {
-            bookingService.sendBookingToMonitoring(EventType.MISTAKE, ControllerMessages.DELETE_GUEST_ERROR.getMessage(id, e.getMessage()));
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ControllerMessages.DELETE_GUEST_ERROR.getMessage(id, e.getMessage()));
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(ControllerMessages.DELETE_GUEST_ERROR.getMessage(id, e.getMessage()));
         }
     }
 
 
     @PostMapping("/checkIn")
-    public ResponseEntity<String> checkIn(@RequestBody Map<String, Integer> request) {
-        Integer guestId = request.get("guestId");
-        Integer hotelId = request.get("hotelId");
-        if (guestId == null) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body
-                    (ControllerMessages.CHECK_IN_ERROR.getMessage(ControllerMessages.GUEST_ID_NOT_NULL.getMessage()));
-        }
-        if (hotelId == null) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).
-                    body(ControllerMessages.CHECK_IN_ERROR.getMessage(ControllerMessages.HOTEL_ID_NOT_NULL.getMessage()));
-        }
-
+    public ResponseEntity<String> checkIn(@RequestBody BookingDto bookingDto) {
         try {
-            GuestEntity guestEntity = bookingService.getGuestByID(guestId);
-            String validationResult = bookingService.validateCheckInHttp(guestId);
-
-            if (validationResult.equals(ControllerMessages.WRONG_GUEST_ID.getMessage()) ||
-                    validationResult.equals(ControllerMessages.EXIST_CHECKIIN.getMessage())) {
-
-                bookingService.sendBookingToMonitoring(EventType.MISTAKE, ControllerMessages.CHECK_IN_ERROR.getMessage(validationResult));
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ControllerMessages.CHECK_IN_ERROR.getMessage(validationResult));
-            }
-
-            try {
-                restTemplate.getForEntity(HOTEL_SERVICE_URL + GET_ALL_HOTELS, String.class);
-            } catch (Exception e) {
-                bookingService.sendBookingToMonitoring(EventType.MISTAKE,
-                        ControllerMessages.CHECK_IN_ERROR.getMessage(ControllerMessages.HOTEL_SERVICE_UNAVAILABLE.getMessage()));
-                return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).body(ControllerMessages.HOTEL_SERVICE_UNAVAILABLE.getMessage());
-            }
-
-            ResponseEntity<String> availabilityResponse = restTemplate.postForEntity(HOTEL_SERVICE_URL +
-                    CHECK_AVAILABILITY_URL + hotelId, null, String.class);
-
-            if (ControllerMessages.AVAILABLE.getMessage().equals(availabilityResponse.getBody())) {
-                bookingService.bookRoom(guestEntity, hotelId);
-                bookingService.sendBookingToMonitoring(EventType.SUCCESS, ControllerMessages.CHECK_IN_SUCCESS.getMessage(guestId, hotelId));
-                return ResponseEntity.ok(ControllerMessages.CHECK_IN_SUCCESS.getMessage(guestId, hotelId));
-            } else if (ControllerMessages.UNAVAILABLE.getMessage().equals(availabilityResponse.getBody())) {
-                bookingService.sendBookingToMonitoring(EventType.MISTAKE, ControllerMessages.CHECK_IN_AVAILABILITY_ERROR.getMessage(hotelId));
-                return ResponseEntity.badRequest().body(ControllerMessages.CHECK_IN_AVAILABILITY_ERROR.getMessage(hotelId));
-            } else {
-                bookingService.sendBookingToMonitoring(EventType.MISTAKE, ControllerMessages.CHECK_IN_NO_VACANCY.getMessage(hotelId));
-                return ResponseEntity.badRequest().body(ControllerMessages.CHECK_IN_NO_VACANCY.getMessage(hotelId));
-            }
-
-        } catch (ResponseStatusException ex) {
-            bookingService.sendBookingToMonitoring(EventType.MISTAKE, ControllerMessages.CHECK_IN_ERROR_WITH_ID.getMessage(guestId, ex.getReason()));
-            return ResponseEntity.status(ex.getStatus()).body(ControllerMessages.CHECK_IN_ERROR_WITH_ID.getMessage(guestId, ex.getReason()));
-
+            String resultMessage = bookingService.checkInHttp(bookingDto);
+            return ResponseEntity.ok(resultMessage);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(ControllerMessages.CHECK_IN_ERROR.getMessage(e.getMessage()));
+        } catch (GuestNotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(ControllerMessages.CHECK_IN_ERROR_WITH_ID.getMessage(bookingDto.getGuestId(), e.getMessage()));
+        } catch (IllegalStateException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(e.getMessage());
         } catch (Exception e) {
-            bookingService.sendBookingToMonitoring(EventType.MISTAKE, ControllerMessages.CHECK_IN_ERROR_WITH_ID.getMessage(guestId, e.getMessage()));
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ControllerMessages.CHECK_IN_ERROR_WITH_ID.getMessage(guestId, e.getMessage()));
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(ControllerMessages.CHECK_IN_ERROR_WITH_ID.getMessage(bookingDto.getGuestId(), e.getMessage()));
         }
     }
+
+
+
 
 
 }
