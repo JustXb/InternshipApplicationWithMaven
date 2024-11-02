@@ -1,20 +1,20 @@
 package com.example.hotelsystem.mapper;
 import com.example.hotelsystem.repository.entity.HotelAvailablilityEntity;
 import com.example.hotelsystem.repository.entity.HotelEntity;
-import com.example.hotelsystem.transport.dto.request.HotelDTO;
-import com.example.hotelsystem.transport.dto.request.HotelAvailabilityDTO;
+
+import com.example.request.HotelAvailabilityDTO;
+import com.example.request.HotelDTO;
 import org.springframework.stereotype.Component;
 
 @Component
 public class Mapper {
 
+
     public static HotelDTO toHotelDTO(HotelEntity entity) {
         if (entity == null) {
             return null;
         }
-        return new HotelDTO(
-                entity.getHotelName()
-        );
+        return new HotelDTO(entity.getHotelName());
     }
 
     public static HotelEntity toHotelEntity(HotelDTO dto) {

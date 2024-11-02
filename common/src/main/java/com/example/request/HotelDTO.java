@@ -1,5 +1,7 @@
 package com.example.request;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.io.Serializable;
 
 public class HotelDTO implements Serializable {
@@ -21,7 +23,7 @@ public class HotelDTO implements Serializable {
     }
 
     public void setHotelName(String hotelName) {
-        this.hotelName = this.hotelName;
+        this.hotelName = hotelName;
     }
 }
 

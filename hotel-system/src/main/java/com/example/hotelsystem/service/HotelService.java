@@ -7,7 +7,8 @@ import com.example.hotelsystem.repository.impl.HotelRepository;
 import com.example.hotelsystem.repository.entity.HotelAvailablilityEntity;
 import com.example.hotelsystem.repository.entity.HotelEntity;
 
-import com.example.hotelsystem.transport.dto.request.HotelDTO;
+
+import com.example.request.HotelDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
