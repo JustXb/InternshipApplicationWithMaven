@@ -61,6 +61,14 @@ public class BookingService {
             throw new IllegalArgumentException(ControllerMessages.HOTEL_ID_NOT_NULL.getMessage());
         }
 
+        try {
+            getAllHotels();
+        } catch (Exception e) {
+            bookingProducer.sendBookingToMonitoring(EventType.MISTAKE,
+                    ControllerMessages.CHECK_IN_ERROR.getMessage(ControllerMessages.HOTEL_SERVICE_UNAVAILABLE.getMessage()));
+            throw new Exception(ControllerMessages.CHECK_IN_ERROR.getMessage(ControllerMessages.HOTEL_SERVICE_UNAVAILABLE.getMessage()));
+        }
+
         GuestEntity guestEntity = getGuestByID(guestId);
         String validationResult = validateCheckInHttp(guestId);
 
@@ -72,11 +80,18 @@ public class BookingService {
         }
 
         ResponseEntity<String> availabilityResponse = checkHotelAvailability(hotelId);
-        if (!ControllerMessages.AVAILABLE.getMessage().equals(availabilityResponse.getBody())) {
+        if ("UNAVAILABLE_NOAVAILABILITY".equals(availabilityResponse.getBody())) {
             bookingProducer.sendBookingToMonitoring(EventType.MISTAKE,
                     ControllerMessages.CHECK_IN_NO_VACANCY.getMessage(hotelId));
             throw new IllegalStateException(ControllerMessages.CHECK_IN_NO_VACANCY.getMessage(hotelId));
         }
+
+        if (ControllerMessages.UNAVAILABLE.getMessage().equals(availabilityResponse.getBody())) {
+            bookingProducer.sendBookingToMonitoring(EventType.MISTAKE,
+                    ControllerMessages.CHECK_IN_AVAILABILITY_ERROR.getMessage(hotelId));
+            throw new IllegalStateException(ControllerMessages.CHECK_IN_AVAILABILITY_ERROR.getMessage(hotelId));
+        }
+
 
         bookRoom(guestEntity, hotelId);
         bookingProducer.sendBookingToMonitoring(EventType.SUCCESS,
@@ -158,15 +173,15 @@ public class BookingService {
             throw new GuestNotFoundException(ServiceMessages.GUEST_NOT_FOUND.getMessage(id));
         }
 
-        int hotelId = getHotelId(id);
-        if (hotelId != 0) {
-            List<HotelDTO> hotels = getAllHotels();
-            if (hotels.isEmpty()) {
-                bookingProducer.sendBookingToMonitoring(EventType.MISTAKE,
-                        ControllerMessages.HOTEL_SERVICE_UNAVAILABLE.getMessage());
-                throw new HotelUnavailableException(ControllerMessages.HOTEL_SERVICE_UNAVAILABLE.getMessage());
-            }
+        try {
+            getAllHotels();
+        } catch (Exception e) {
+            bookingProducer.sendBookingToMonitoring(EventType.MISTAKE,
+                    ControllerMessages.CHECK_IN_ERROR.getMessage(ControllerMessages.HOTEL_SERVICE_UNAVAILABLE.getMessage()));
+            throw new HotelUnavailableException(ControllerMessages.DELETE_GUEST_ERROR.getMessage(id, ControllerMessages.HOTEL_SERVICE_UNAVAILABLE.getMessage()));
         }
+
+        int hotelId = getHotelId(id);
 
         guestRepository.deleteById(id);
 
@@ -249,7 +264,14 @@ public class BookingService {
     }
 
 
-    public List<HotelDTO> getAllHotels() {
+    public List<HotelDTO> getAllHotels() throws Exception {
+        try {
+            hotelsWebClient.getAllHotels();
+        } catch (Exception e) {
+            bookingProducer.sendBookingToMonitoring(EventType.MISTAKE,
+                    ControllerMessages.CHECK_IN_ERROR.getMessage(ControllerMessages.HOTEL_SERVICE_UNAVAILABLE.getMessage()));
+            throw new Exception(ControllerMessages.CHECK_IN_ERROR.getMessage(ControllerMessages.HOTEL_SERVICE_UNAVAILABLE.getMessage()));
+        }
         return hotelsWebClient.getAllHotels();
     }
 

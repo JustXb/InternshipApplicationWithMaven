@@ -90,9 +90,14 @@ public class HotelService {
         List<HotelDTO> hotelDTOs = new ArrayList<>();
         List<HotelEntity> hotels = hotelRepository.findAll();
 
-        for(HotelEntity hotel: hotels){
-            hotelDTOs.add(mapper.toHotelDTO(hotel));
+
+        for (HotelEntity hotel : hotels) {
+            Optional<HotelAvailablilityEntity> availabilityEntity = hotelAvailabilityRepository.findById(hotel.getId());
+            HotelDTO hotelDTO = mapper.toHotelDto(hotel, availabilityEntity.get());
+            hotelDTOs.add(hotelDTO);
         }
         return hotelDTOs;
     }
+
+
 }

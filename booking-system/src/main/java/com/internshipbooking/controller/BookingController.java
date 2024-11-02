@@ -33,7 +33,11 @@ public class BookingController {
 
     @GetMapping("/getAllHotels")
     public ResponseEntity<List<HotelDTO>> getAllHotels(){
-        return ResponseEntity.ok(bookingService.getAllHotels());
+        try {
+            return ResponseEntity.ok(bookingService.getAllHotels());
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @GetMapping("/getGuest/{id}")
@@ -55,8 +59,6 @@ public class BookingController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ControllerMessages.ADD_GUEST_ERROR.getMessage(e.getMessage()));
         }
     }
-
-
 
     @PutMapping("/updateGuest/{id}")
     public ResponseEntity<String> updateGuest(@PathVariable int id,
@@ -87,7 +89,6 @@ public class BookingController {
         }
     }
 
-
     @PostMapping("/checkIn")
     public ResponseEntity<String> checkIn(@RequestBody BookingDto bookingDto) {
         try {
@@ -99,17 +100,10 @@ public class BookingController {
         } catch (GuestNotFoundException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body(ControllerMessages.CHECK_IN_ERROR_WITH_ID.getMessage(bookingDto.getGuestId(), e.getMessage()));
-        } catch (IllegalStateException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                    .body(e.getMessage());
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body(ControllerMessages.CHECK_IN_ERROR_WITH_ID.getMessage(bookingDto.getGuestId(), e.getMessage()));
         }
     }
-
-
-
-
 
 }

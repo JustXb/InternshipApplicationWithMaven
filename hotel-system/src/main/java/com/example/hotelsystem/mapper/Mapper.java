@@ -10,13 +10,6 @@ import org.springframework.stereotype.Component;
 public class Mapper {
 
 
-    public static HotelDTO toHotelDTO(HotelEntity entity) {
-        if (entity == null) {
-            return null;
-        }
-        return new HotelDTO(entity.getHotelName());
-    }
-
     public static HotelEntity toHotelEntity(HotelDTO dto) {
         if (dto == null) {
             return null;
@@ -50,4 +43,12 @@ public class Mapper {
     }
 
 
+    public HotelDTO toHotelDto(HotelEntity hotel, HotelAvailablilityEntity availablilityEntity) {
+        HotelDTO hotelDTO = new HotelDTO();
+        hotelDTO.setId(hotel.getId());
+        hotelDTO.setHotelName(hotel.getHotelName());
+        hotelDTO.setAvailability(availablilityEntity.getAvailability());
+
+        return hotelDTO;
+    }
 }

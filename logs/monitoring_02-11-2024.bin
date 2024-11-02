@@ -24,3 +24,26 @@ Sat_Nov_02_02-18-22_MSK_2024 MISTAKE Ошибка: HV000030: No validator could 
 Sat_Nov_02_02-18-35_MSK_2024 MISTAKE Ошибка: HV000030: No validator could be found for constraint 'javax.validation.constraints.NotBlank' validating type 'java.lang.Integer'. Check configuration for 'age'
 Sat_Nov_02_02-19-51_MSK_2024 CREATED Гость GuestEntity{id=15, name='Grrr', age=12, passportNumber='115322', address='Moscow'} успешно добавлен 
 Sat_Nov_02_02-20-16_MSK_2024 SUCCESS Гость c ID 15 успешно заселен в отель 2.
+Sat_Nov_02_11-00-25_MSK_2024 MISTAKE Ошибка заселения: Гость уже заселен в другой отель.
+Sat_Nov_02_11-00-45_MSK_2024 CREATED Гость GuestEntity{id=16, name='Grrr', age=12, passportNumber='228855', address='Moscow'} успешно добавлен 
+Sat_Nov_02_11-01-00_MSK_2024 MISTAKE Ошибка заселения: в отеле 5 нет свободных мест.
+Sat_Nov_02_11-04-38_MSK_2024 MISTAKE Ошибка заселения: в отеле 5 нет свободных мест.
+Sat_Nov_02_11-06-46_MSK_2024 MISTAKE Ошибка заселения: в отеле 5 нет свободных мест.
+Sat_Nov_02_11-29-07_MSK_2024 MISTAKE Ошибка заселения: Сервис отелей недоступен.
+Sat_Nov_02_11-32-37_MSK_2024 MISTAKE Ошибка заселения: Сервис отелей недоступен.
+Sat_Nov_02_11-32-50_MSK_2024 MISTAKE Ошибка заселения: отель 5 недоступен.
+Sat_Nov_02_11-32-53_MSK_2024 MISTAKE Ошибка заселения: в отеле 3 нет свободных мест.
+Sat_Nov_02_11-32-57_MSK_2024 SUCCESS Гость c ID 16 успешно заселен в отель 2.
+Sat_Nov_02_12-00-18_MSK_2024 MISTAKE Ошибка: I/O error on GET request for "http://localhost:8081/hotels/getAllHotels": Connection refused: connect; nested exception is java.net.ConnectException: Connection refused: connect
+Sat_Nov_02_12-08-43_MSK_2024 MISTAKE Ошибка заселения: Сервис отелей недоступен.
+Sat_Nov_02_12-08-43_MSK_2024 MISTAKE Ошибка: java.lang.Exception: Ошибка заселения: Сервис отелей недоступен.
+Sat_Nov_02_12-09-21_MSK_2024 MISTAKE Гостя с ID 12 не существует.
+Sat_Nov_02_12-09-25_MSK_2024 MISTAKE Гостя с ID 13 не существует.
+Sat_Nov_02_12-09-28_MSK_2024 MISTAKE Гостя с ID 14 не существует.
+Sat_Nov_02_12-09-31_MSK_2024 MISTAKE Ошибка заселения: Сервис отелей недоступен.
+Sat_Nov_02_12-09-31_MSK_2024 MISTAKE Ошибка заселения: Сервис отелей недоступен.
+Sat_Nov_02_12-10-02_MSK_2024 MISTAKE Ошибка заселения: Сервис отелей недоступен.
+Sat_Nov_02_12-10-02_MSK_2024 MISTAKE Ошибка заселения: Сервис отелей недоступен.
+Sat_Nov_02_12-10-24_MSK_2024 MISTAKE Ошибка заселения: Сервис отелей недоступен.
+Sat_Nov_02_12-10-24_MSK_2024 MISTAKE Ошибка заселения: Сервис отелей недоступен.
+Sat_Nov_02_12-10-52_MSK_2024 SUCCESS Гость с ID 15 успешно удален, доступность отеля 2 увеличена.

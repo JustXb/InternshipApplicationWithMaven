@@ -9,7 +9,6 @@ public class HotelAvailabilityDTO implements Serializable {
     private int id;
     private int availableRooms;
 
-    // Конструкторы
     public HotelAvailabilityDTO() {}
 
     public HotelAvailabilityDTO(int id, int availableRooms) {
