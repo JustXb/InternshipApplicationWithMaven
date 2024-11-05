@@ -8,6 +8,7 @@ import com.example.hotelsystem.repository.entity.HotelAvailablilityEntity;
 import com.example.hotelsystem.repository.entity.HotelEntity;
 
 
+import com.example.request.AvailabilityDto;
 import com.example.request.HotelDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -44,6 +45,9 @@ public class HotelService {
         Optional<HotelAvailablilityEntity> hotelAvailabilityOpt = hotelAvailabilityRepository.findById(id);
 
         if (hotelAvailabilityOpt.isEmpty()) {
+            AvailabilityDto availabilityDto = new AvailabilityDto();
+            availabilityDto.setAvailable(false);
+            availabilityDto.setReason(ServiceMessages.UNAVAILABLE.getMessage());
             LOGGER.warning(ServiceMessages.UNAVAILABLE.getMessage());
             return true;
         }

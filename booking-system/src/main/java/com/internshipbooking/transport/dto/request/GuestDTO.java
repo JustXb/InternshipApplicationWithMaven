@@ -1,5 +1,6 @@
 package com.internshipbooking.transport.dto.request;
-import com.internshipbooking.service.ServiceMessages;
+
+import com.internshipbooking.repository.entity.BookingEntity;
 
 import java.io.Serializable;
 
@@ -12,12 +13,12 @@ public class GuestDTO implements Serializable {
 
         private int id;
 
-        @NotBlank(message = "имя не может быть пустым.")
+        @NotBlank(message = "Имя не может быть пустым.")
         @Size(max = 20, message = "Имя гостя не может быть длиннее 20 символов")
         @Pattern(regexp = "^[A-Z].*", message = "Имя гостя должно начинаться с большой буквы")
         private String name;
 
-        @Min(value = 0, message = "Возраст должен быть больше 0")
+        @Min(value = 0, message = "Возраст должен быть больше или равен 0")
         @Max(value = 120, message = "Возраст должен быть меньше 121")
         private int age;
 
@@ -29,6 +30,7 @@ public class GuestDTO implements Serializable {
         @NotNull(message = "Номер паспорта не может быть пустым.")
         @Pattern(regexp = "\\d{6}", message = "Номер паспорта должен содержать ровно 6 цифр.")
         private String passportNumber;
+
 
 
     public GuestDTO() {

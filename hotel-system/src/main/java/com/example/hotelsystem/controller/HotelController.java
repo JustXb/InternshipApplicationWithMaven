@@ -2,6 +2,7 @@ package com.example.hotelsystem.controller;
 
 import com.example.hotelsystem.service.HotelService;
 import com.example.request.HotelDTO;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,6 +14,7 @@ public class HotelController {
 
     private final HotelService hotelService;
 
+    @Autowired
     public HotelController(HotelService hotelService) {
         this.hotelService = hotelService;
     }

@@ -86,6 +86,10 @@ public class GuestEntity {
         return booking;
     }
 
+    public void setBooking(BookingEntity booking) {
+        this.booking = booking;
+    }
+
     public void getInfo() {
         System.out.println("ID : " + this.id);
         System.out.println("Name : " + this.name);

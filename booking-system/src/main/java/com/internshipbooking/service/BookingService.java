@@ -73,7 +73,7 @@ public class BookingService {
         String validationResult = validateCheckInHttp(guestId);
 
         if (ControllerMessages.WRONG_GUEST_ID.getMessage().equals(validationResult) ||
-                ControllerMessages.EXIST_CHECKIIN.getMessage().equals(validationResult)) {
+                ControllerMessages.EXIST_CHECK_IN.getMessage().equals(validationResult)) {
             bookingProducer.sendBookingToMonitoring(EventType.MISTAKE,
                     ControllerMessages.CHECK_IN_ERROR.getMessage(validationResult));
             throw new IllegalArgumentException(validationResult);
@@ -186,7 +186,7 @@ public class BookingService {
         guestRepository.deleteById(id);
 
         if (hotelId != 0) {
-            increaseHotelAvailability(hotelId);
+            hotelsWebClient.increaseAvailability(hotelId);
             bookingProducer.sendBookingToMonitoring(EventType.SUCCESS,
                     ControllerMessages.GUEST_DELETED.getMessage(id, hotelId));
             return ControllerMessages.GUEST_DELETED.getMessage(id, hotelId);
@@ -218,9 +218,9 @@ public class BookingService {
     public void updateGuestHttp(int id, GuestDTO guestDto) throws EnteredNotValidDataException, GuestNotFoundException {
         try {
             GuestEntity guest = mapper.toEntity(guestDto);
+            guest.setBooking(guestRepository.findById(id).get().getBooking());
 
             if (guestRepository.existsById(id)) {
-
                 boolean passportExists = guestRepository.existsByPassportNumberAndIdNot(guest.getPassportNumber(), id);
                 if (passportExists) {
                     bookingProducer.sendBookingToMonitoring
@@ -252,7 +252,7 @@ public class BookingService {
         }
 
         if (!validateBookingDoubleCheckIn(guestId)) {
-            return ServiceMessages.EXIST_CHECKIIN.getMessage();
+            return ServiceMessages.EXIST_CHECK_IN.getMessage();
         }
 
         return ServiceMessages.ACCESS_CHECKIN.getMessage();
@@ -279,7 +279,4 @@ public class BookingService {
         return hotelsWebClient.checkAvailability(hotelId);
     }
 
-    public ResponseEntity<String> increaseHotelAvailability(int hotelId) {
-        return hotelsWebClient.increaseAvailability(hotelId);
-    }
 }

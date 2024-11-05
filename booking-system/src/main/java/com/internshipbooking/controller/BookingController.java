@@ -7,6 +7,7 @@ import com.internshipbooking.repository.entity.GuestEntity;
 import com.internshipbooking.service.BookingService;
 import com.internshipbooking.transport.dto.request.BookingDto;
 import com.internshipbooking.transport.dto.request.GuestDTO;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,6 +22,7 @@ public class BookingController {
     BookingService bookingService;
 
 
+    @Autowired
     public BookingController(BookingService bookingService) {
         this.bookingService = bookingService;
     }
