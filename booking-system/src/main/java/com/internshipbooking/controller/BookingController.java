@@ -1,12 +1,11 @@
 package com.internshipbooking.controller;
-//TODO: fix messages(error)
 import com.example.request.HotelDTO;
 import com.internshipbooking.exception.EnteredNotValidDataException;
 import com.internshipbooking.exception.GuestNotFoundException;
 import com.internshipbooking.repository.entity.GuestEntity;
 import com.internshipbooking.service.BookingService;
 import com.internshipbooking.transport.dto.request.BookingDto;
-import com.internshipbooking.transport.dto.request.GuestDTO;
+import com.internshipbooking.transport.dto.request.GuestDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,15 +20,14 @@ import java.util.List;
 public class BookingController {
     BookingService bookingService;
 
-
     @Autowired
     public BookingController(BookingService bookingService) {
         this.bookingService = bookingService;
     }
 
     @GetMapping("/getAllGuests")
-    public ResponseEntity<List<GuestDTO>> getAllGuests(){
-        List<GuestDTO> guests = bookingService.getAllGuests();
+    public ResponseEntity<List<GuestDto>> getAllGuests(){
+        List<GuestDto> guests = bookingService.getAllGuests();
         return ResponseEntity.ok(guests);
     }
 
@@ -49,7 +47,7 @@ public class BookingController {
     }
 
     @PostMapping("/addGuest")
-    public ResponseEntity<String> addGuest(@RequestBody @Valid GuestDTO guestDto) {
+    public ResponseEntity<String> addGuest(@RequestBody @Valid GuestDto guestDto) {
         try {
             int guestId = bookingService.addGuest(guestDto);
             return ResponseEntity.ok(ControllerMessages.GUEST_ADDED.getMessage(guestId));
@@ -64,7 +62,7 @@ public class BookingController {
 
     @PutMapping("/updateGuest/{id}")
     public ResponseEntity<String> updateGuest(@PathVariable int id,
-                                              @RequestBody @Valid GuestDTO guestDTO) {
+                                              @RequestBody @Valid GuestDto guestDTO) {
         try {
             bookingService.updateGuestHttp(id, guestDTO);
             return ResponseEntity.ok(ControllerMessages.GUEST_UPDATED.getMessage(id));

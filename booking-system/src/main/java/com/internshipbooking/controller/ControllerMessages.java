@@ -10,6 +10,7 @@ public enum ControllerMessages {
 
     AVAILABLE("AVAILABLE"),
     UNAVAILABLE("UNAVAILABLE"),
+    UNAVAILABLE_NOAVAILABILITY("UNAVAILABLE_NOAVAILABILITY"),
 
 
     EXIST_CHECK_IN("Гость уже заселен в другой отель."),

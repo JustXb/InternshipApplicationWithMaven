@@ -1,8 +1,14 @@
 package com.internshipbooking.service;
 
 
+
 import com.example.EventType;
 import com.example.request.HotelDTO;
+
+import static com.example.EventType.*;
+import static com.internshipbooking.controller.ControllerMessages.*;
+import static com.internshipbooking.service.ServiceMessages.*;
+
 import com.internshipbooking.controller.ControllerMessages;
 import com.internshipbooking.exception.EnteredNotValidDataException;
 import com.internshipbooking.exception.GuestNotFoundException;
@@ -13,7 +19,7 @@ import com.internshipbooking.repository.entity.GuestEntity;
 import com.internshipbooking.repository.impl.BookingRepository;
 import com.internshipbooking.repository.impl.GuestRepository;
 import com.internshipbooking.transport.dto.request.BookingDto;
-import com.internshipbooking.transport.dto.request.GuestDTO;
+import com.internshipbooking.transport.dto.request.GuestDto;
 import com.internshipbooking.mapper.Mapper;
 
 import com.internshipbooking.webclient.HotelsWebClient;
@@ -24,6 +30,10 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+
+import static com.internshipbooking.service.ServiceMessages.EXIST_CHECK_IN;
+import static com.internshipbooking.service.ServiceMessages.WRONG_GUEST_ID;
+
 
 @Service
 public class BookingService {
@@ -45,67 +55,71 @@ public class BookingService {
     }
 
 
-    public String checkInHttp(BookingDto bookingDto) throws GuestNotFoundException, Exception {
+    public String checkInHttp(BookingDto bookingDto) throws Exception {
 
         int guestId = bookingDto.getGuestId();
         int hotelId = bookingDto.getHotelId();
 
         if (guestId == 0) {
-            bookingProducer.sendBookingToMonitoring(EventType.MISTAKE,
-                    ControllerMessages.GUEST_ID_NOT_NULL.getMessage());
-            throw new IllegalArgumentException(ControllerMessages.GUEST_ID_NOT_NULL.getMessage());
+            bookingProducer.sendBookingToMonitoring(MISTAKE,
+                    GUEST_ID_NOT_NULL.getMessage());
+            throw new IllegalArgumentException(GUEST_ID_NOT_NULL.getMessage());
         }
         if (hotelId == 0) {
-            bookingProducer.sendBookingToMonitoring(EventType.MISTAKE,
-                    ControllerMessages.HOTEL_ID_NOT_NULL.getMessage());
-            throw new IllegalArgumentException(ControllerMessages.HOTEL_ID_NOT_NULL.getMessage());
+            bookingProducer.sendBookingToMonitoring(MISTAKE,
+                    HOTEL_ID_NOT_NULL.getMessage());
+            throw new IllegalArgumentException(HOTEL_ID_NOT_NULL.getMessage());
         }
 
         try {
             getAllHotels();
         } catch (Exception e) {
-            bookingProducer.sendBookingToMonitoring(EventType.MISTAKE,
-                    ControllerMessages.CHECK_IN_ERROR.getMessage(ControllerMessages.HOTEL_SERVICE_UNAVAILABLE.getMessage()));
-            throw new Exception(ControllerMessages.CHECK_IN_ERROR.getMessage(ControllerMessages.HOTEL_SERVICE_UNAVAILABLE.getMessage()));
+            bookingProducer.sendBookingToMonitoring(MISTAKE,
+                    CHECK_IN_ERROR.getMessage(HOTEL_SERVICE_UNAVAILABLE.getMessage()));
+            throw new HotelUnavailableException(CHECK_IN_ERROR.getMessage(HOTEL_SERVICE_UNAVAILABLE.getMessage()));
         }
 
         GuestEntity guestEntity = getGuestByID(guestId);
-        String validationResult = validateCheckInHttp(guestId);
+        ServiceMessages validationResult = validateCheckInHttp(guestId);
+        String stringResult = validationResult.getMessage();
 
-        if (ControllerMessages.WRONG_GUEST_ID.getMessage().equals(validationResult) ||
-                ControllerMessages.EXIST_CHECK_IN.getMessage().equals(validationResult)) {
-            bookingProducer.sendBookingToMonitoring(EventType.MISTAKE,
-                    ControllerMessages.CHECK_IN_ERROR.getMessage(validationResult));
-            throw new IllegalArgumentException(validationResult);
+        if (WRONG_GUEST_ID.equals(validationResult) ||
+                EXIST_CHECK_IN.equals(validationResult)) {
+            bookingProducer.sendBookingToMonitoring(MISTAKE,
+                    CHECK_IN_ERROR.getMessage(stringResult));
+            throw new IllegalArgumentException(stringResult);
         }
 
         ResponseEntity<String> availabilityResponse = checkHotelAvailability(hotelId);
-        if ("UNAVAILABLE_NOAVAILABILITY".equals(availabilityResponse.getBody())) {
-            bookingProducer.sendBookingToMonitoring(EventType.MISTAKE,
-                    ControllerMessages.CHECK_IN_NO_VACANCY.getMessage(hotelId));
-            throw new IllegalStateException(ControllerMessages.CHECK_IN_NO_VACANCY.getMessage(hotelId));
+        String noVacancy = CHECK_IN_NO_VACANCY.getMessage(hotelId);
+        if (UNAVAILABLE_NOAVAILABILITY.name().equals(availabilityResponse.getBody())) {
+
+            bookingProducer.sendBookingToMonitoring(MISTAKE,
+                    CHECK_IN_NO_VACANCY.getMessage(hotelId));
+            throw new IllegalStateException(noVacancy);
         }
 
-        if (ControllerMessages.UNAVAILABLE.getMessage().equals(availabilityResponse.getBody())) {
-            bookingProducer.sendBookingToMonitoring(EventType.MISTAKE,
-                    ControllerMessages.CHECK_IN_AVAILABILITY_ERROR.getMessage(hotelId));
-            throw new IllegalStateException(ControllerMessages.CHECK_IN_AVAILABILITY_ERROR.getMessage(hotelId));
+        if (UNAVAILABLE.name().equals(availabilityResponse.getBody())) {
+            bookingProducer.sendBookingToMonitoring(MISTAKE,
+                    noVacancy);
+            throw new IllegalStateException(CHECK_IN_AVAILABILITY_ERROR.getMessage(hotelId));
         }
 
 
         bookRoom(guestEntity, hotelId);
-        bookingProducer.sendBookingToMonitoring(EventType.SUCCESS,
-                ControllerMessages.CHECK_IN_SUCCESS.getMessage(guestId, hotelId));
-        return ControllerMessages.CHECK_IN_SUCCESS.getMessage(guestId, hotelId);
+        String checkInSuccess = CHECK_IN_SUCCESS.getMessage(guestId, hotelId);
+        bookingProducer.sendBookingToMonitoring(SUCCESS,
+                checkInSuccess);
+        return checkInSuccess;
     }
 
-    public void bookRoom(GuestEntity guestEntity, int hotelId) {
+    private void bookRoom(GuestEntity guestEntity, int hotelId) {
         BookingEntity booking = new BookingEntity(guestEntity, hotelId);
         bookingRepository.save(booking);
     }
 
 
-    public boolean validateBookingDoubleCheckIn(int guestId) {
+    private boolean validateBookingDoubleCheckIn(int guestId) {
         List<BookingEntity> bookings = bookingRepository.findAll();
         for (BookingEntity booking : bookings) {
             if (booking.getGuest().getId() == guestId) {
@@ -118,57 +132,56 @@ public class BookingService {
 
     private void validatePassportNumber(String passportNumber) throws EnteredNotValidDataException {
             List<GuestEntity> guests = guestRepository.findAll();
+            String existingGuest = EXISTING_GUEST.getMessage();
             for (GuestEntity guest : guests) {
                 if (guest.getPassportNumber().equals(passportNumber)) {
-                    bookingProducer.sendBookingToMonitoring(EventType.MISTAKE, ControllerMessages.ADD_GUEST_ERROR.
-                            getMessage(ServiceMessages.EXISTING_GUEST.getMessage()));
-                    throw new EnteredNotValidDataException(ServiceMessages.EXISTING_GUEST.getMessage());
+                    bookingProducer.sendBookingToMonitoring(MISTAKE, ADD_GUEST_ERROR.
+                            getMessage(existingGuest));
+                    throw new EnteredNotValidDataException(existingGuest);
                 }
             }
     }
 
 
 
-    public List<GuestDTO> getAllGuests() {
-        List<GuestDTO> guestDTOs = new ArrayList<>();
+    public List<GuestDto> getAllGuests() {
+        List<GuestDto> guestDtos = new ArrayList<>();
         List<GuestEntity> guests = guestRepository.findAllByOrderByIdAsc();
         for(GuestEntity guest: guests){
-                guestDTOs.add(mapper.toDto(guest));
+                guestDtos.add(mapper.toDto(guest));
         }
-        return guestDTOs;
+        return guestDtos;
     }
 
     public GuestEntity getGuestByID(int id) throws GuestNotFoundException {
-        if (guestRepository.existsById(id)) {
-            return guestRepository.findById(id).get();
-        } else {
-            throw new GuestNotFoundException(ServiceMessages.GUEST_NOT_FOUND.getMessage(id));
-        }
+        return guestRepository.findById(id)
+                .orElseThrow(() -> new GuestNotFoundException(ServiceMessages.GUEST_NOT_FOUND.getMessage(id)));
     }
 
 
-    public int addGuest(GuestDTO guestDTO) throws EnteredNotValidDataException {
+
+    public int addGuest(GuestDto guestDTO) throws EnteredNotValidDataException {
         try {
             GuestEntity guestEntity = mapper.toEntity(guestDTO);
-
             validatePassportNumber(guestEntity.getPassportNumber());
 
 
             guestRepository.save(guestEntity);
-            bookingProducer.sendBookingToMonitoring(EventType.CREATED,
-                    ControllerMessages.GUEST_ADDED.getMessage(guestEntity.toString()));
+            bookingProducer.sendBookingToMonitoring(CREATED,
+                    GUEST_ADDED.getMessage(guestEntity.toString()));
             return guestEntity.getId();
         }
         catch (Exception e) {
-            bookingProducer.sendBookingToMonitoring(EventType.MISTAKE,
-                    ControllerMessages.ADD_GUEST_ERROR.getMessage(e.getMessage()));
-            throw new RuntimeException(ControllerMessages.ADD_GUEST_ERROR.getMessage(e.getMessage()));
+            String addGuestError = ADD_GUEST_ERROR.getMessage(e.getMessage());
+            bookingProducer.sendBookingToMonitoring(MISTAKE,
+                    addGuestError);
+            throw new RuntimeException(addGuestError);
         }
     }
 
     public String deleteGuestHttp(int id) throws GuestNotFoundException, HotelUnavailableException {
         if (!guestRepository.existsById(id)) {
-            bookingProducer.sendBookingToMonitoring(EventType.MISTAKE,
+            bookingProducer.sendBookingToMonitoring(MISTAKE,
                     ServiceMessages.GUEST_NOT_FOUND.getMessage(id));
             throw new GuestNotFoundException(ServiceMessages.GUEST_NOT_FOUND.getMessage(id));
         }
@@ -176,9 +189,12 @@ public class BookingService {
         try {
             getAllHotels();
         } catch (Exception e) {
-            bookingProducer.sendBookingToMonitoring(EventType.MISTAKE,
-                    ControllerMessages.CHECK_IN_ERROR.getMessage(ControllerMessages.HOTEL_SERVICE_UNAVAILABLE.getMessage()));
-            throw new HotelUnavailableException(ControllerMessages.DELETE_GUEST_ERROR.getMessage(id, ControllerMessages.HOTEL_SERVICE_UNAVAILABLE.getMessage()));
+            bookingProducer.sendBookingToMonitoring(MISTAKE,
+                    CHECK_IN_ERROR.getMessage(HOTEL_SERVICE_UNAVAILABLE.getMessage()));
+
+            String errorMessage = DELETE_GUEST_ERROR.getMessage(id, HOTEL_SERVICE_UNAVAILABLE.getMessage());
+            throw new HotelUnavailableException(errorMessage);
+
         }
 
         int hotelId = getHotelId(id);
@@ -187,17 +203,20 @@ public class BookingService {
 
         if (hotelId != 0) {
             hotelsWebClient.increaseAvailability(hotelId);
-            bookingProducer.sendBookingToMonitoring(EventType.SUCCESS,
-                    ControllerMessages.GUEST_DELETED.getMessage(id, hotelId));
-            return ControllerMessages.GUEST_DELETED.getMessage(id, hotelId);
+            String guestDeleted = GUEST_DELETED.getMessage(id, hotelId);
+            bookingProducer.sendBookingToMonitoring(SUCCESS,
+                    guestDeleted);
+            return guestDeleted;
         } else {
-            bookingProducer.sendBookingToMonitoring(EventType.SUCCESS,
-                    ControllerMessages.GUEST_DELETED_WITHOUT_HOTEL.getMessage(id));
-            return ControllerMessages.GUEST_DELETED_WITHOUT_HOTEL.getMessage(id);
+            String guestDeletedWithoutHotel = GUEST_DELETED_WITHOUT_HOTEL.getMessage(id);
+            bookingProducer.sendBookingToMonitoring(SUCCESS,
+                    guestDeletedWithoutHotel);
+            return guestDeletedWithoutHotel;
         }
     }
 
-    public int getHotelId(int guestId) throws GuestNotFoundException {
+
+    private int getHotelId(int guestId) throws GuestNotFoundException {
         Optional<GuestEntity> optionalGuest = guestRepository.findById(guestId);
 
         if (optionalGuest.isPresent()) {
@@ -215,7 +234,7 @@ public class BookingService {
     }
 
 
-    public void updateGuestHttp(int id, GuestDTO guestDto) throws EnteredNotValidDataException, GuestNotFoundException {
+    public void updateGuestHttp(int id, GuestDto guestDto) throws EnteredNotValidDataException, GuestNotFoundException {
         try {
             GuestEntity guest = mapper.toEntity(guestDto);
             guest.setBooking(guestRepository.findById(id).get().getBooking());
@@ -224,38 +243,38 @@ public class BookingService {
                 boolean passportExists = guestRepository.existsByPassportNumberAndIdNot(guest.getPassportNumber(), id);
                 if (passportExists) {
                     bookingProducer.sendBookingToMonitoring
-                            (EventType.MISTAKE, ControllerMessages.UPDATE_GUEST_ERROR.getMessage(id, guest.getPassportNumber()));
-                    throw new EnteredNotValidDataException(ServiceMessages.GUEST_WITH_PASSPORT_EXIST.getMessage(guest.getPassportNumber()));
+                            (MISTAKE, UPDATE_GUEST_ERROR.getMessage(id, guest.getPassportNumber()));
+                    throw new EnteredNotValidDataException(GUEST_WITH_PASSPORT_EXIST.getMessage(guest.getPassportNumber()));
                 } else {
                     guest.setId(id);
                     guestRepository.save(guest);
                     bookingProducer.sendBookingToMonitoring
-                            (EventType.SUCCESS, ControllerMessages.GUEST_UPDATED.getMessage(id));
+                            (SUCCESS, GUEST_UPDATED.getMessage(id));
 
                 }
             } else {
                 bookingProducer.sendBookingToMonitoring
-                        (EventType.MISTAKE, ControllerMessages.UPDATE_GUEST_ERROR.getMessage(id, ServiceMessages.GUEST_NOT_FOUND.getMessage(id)));
+                        (MISTAKE, UPDATE_GUEST_ERROR.getMessage(id, ServiceMessages.GUEST_NOT_FOUND.getMessage(id)));
                 throw new GuestNotFoundException(ServiceMessages.GUEST_NOT_FOUND.getMessage(id));
             }
         }
         catch (Exception e) {
-            bookingProducer.sendBookingToMonitoring(EventType.MISTAKE,
-                    ControllerMessages.UPDATE_GUEST_ERROR.getMessage(id, e.getMessage()));
-            throw new RuntimeException(ControllerMessages.UPDATE_GUEST_ERROR.getMessage(id, e.getMessage()));
+            bookingProducer.sendBookingToMonitoring(MISTAKE,
+                    UPDATE_GUEST_ERROR.getMessage(id, e.getMessage()));
+            throw new RuntimeException(UPDATE_GUEST_ERROR.getMessage(id, e.getMessage()));
         }
     }
 
-    public String validateCheckInHttp(int guestId) {
+    public ServiceMessages validateCheckInHttp(int guestId) {
         if (!guestRepository.existsById(guestId)) {
-            return ServiceMessages.WRONG_GUEST_ID.getMessage();
+            return WRONG_GUEST_ID;
         }
 
         if (!validateBookingDoubleCheckIn(guestId)) {
-            return ServiceMessages.EXIST_CHECK_IN.getMessage();
+            return EXIST_CHECK_IN;
         }
 
-        return ServiceMessages.ACCESS_CHECKIN.getMessage();
+        return ACCESS_CHECKIN;
     }
 
 
@@ -268,14 +287,15 @@ public class BookingService {
         try {
             hotelsWebClient.getAllHotels();
         } catch (Exception e) {
-            bookingProducer.sendBookingToMonitoring(EventType.MISTAKE,
-                    ControllerMessages.CHECK_IN_ERROR.getMessage(ControllerMessages.HOTEL_SERVICE_UNAVAILABLE.getMessage()));
-            throw new Exception(ControllerMessages.CHECK_IN_ERROR.getMessage(ControllerMessages.HOTEL_SERVICE_UNAVAILABLE.getMessage()));
+            bookingProducer.sendBookingToMonitoring(MISTAKE,
+                    CHECK_IN_ERROR.getMessage(HOTEL_SERVICE_UNAVAILABLE.getMessage()));
+            throw new Exception(CHECK_IN_ERROR.getMessage(HOTEL_SERVICE_UNAVAILABLE.getMessage()));
         }
         return hotelsWebClient.getAllHotels();
     }
 
-    public ResponseEntity<String> checkHotelAvailability(int hotelId) {
+
+    private ResponseEntity<String> checkHotelAvailability(int hotelId) {
         return hotelsWebClient.checkAvailability(hotelId);
     }
 

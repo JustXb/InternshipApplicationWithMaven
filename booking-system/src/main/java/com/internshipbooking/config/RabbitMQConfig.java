@@ -44,5 +44,4 @@ public class RabbitMQConfig {
         return BindingBuilder.bind(monitoringQueue).to(bookingExchange).with(MONITORING_ROUTING_KEY);
     }
 
-
 }

@@ -4,6 +4,7 @@ import com.example.EventType;
 import com.internshipbooking.exception.ResponseException;
 import com.internshipbooking.service.BookingService;
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -20,6 +21,7 @@ public class GlobalExceptionHandler {
 
     private final BookingService bookingService;
 
+    @Autowired
     public GlobalExceptionHandler(BookingService bookingService) {
         this.bookingService = bookingService;
     }
